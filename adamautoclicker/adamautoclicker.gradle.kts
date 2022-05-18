@@ -32,7 +32,7 @@ project.extra["PluginName"] = "A1C AutoClicker"
 project.extra["PluginDescription"] = "The better clicks"
 
 dependencies {
-//    implementation(project(":ExtUtils"))
+//    implementation(project(":A1CExtUtils"))
 annotationProcessor(Libraries.lombok)
 annotationProcessor(Libraries.pf4j)
 

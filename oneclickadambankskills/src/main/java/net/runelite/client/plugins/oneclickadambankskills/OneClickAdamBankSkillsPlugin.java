@@ -236,7 +236,7 @@ public class OneClickAdamBankSkillsPlugin extends Plugin
         }
         if (!isInvEmpty() && skillStage != 4)
         {
-            event.setMenuEntry(depositAllofThisID(id2));
+            event.setMenuEntry(depositItems());
             timeout = 1;
             skillStage = 3;
             return;
@@ -281,7 +281,7 @@ public class OneClickAdamBankSkillsPlugin extends Plugin
         }
         if (!isInvEmpty() && skillStage != 4)
         {
-            event.setMenuEntry(depositAllofThisID(id2));
+            event.setMenuEntry(depositItems());
             timeout = 1;
             skillStage = 3;
             return;

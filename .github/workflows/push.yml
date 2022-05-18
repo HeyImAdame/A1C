@@ -37,19 +37,19 @@ jobs:
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Building client
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Upload client artifacts to local maven
         run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
@@ -122,19 +122,19 @@ jobs:
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Building client
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Upload client artifacts to local maven
         run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/plugins-source/runelite
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew

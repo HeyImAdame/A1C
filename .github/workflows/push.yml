@@ -110,7 +110,7 @@ jobs:
 
       - uses: actions/checkout@v1
         with:
-          repository: HeyImAdame/A1C
+          repository: HeyImAdame/A1C-source
           ref: master
 
       - uses: actions/cache@v1

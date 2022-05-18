@@ -5,7 +5,7 @@ import net.runelite.client.config.Config;
 
 @ConfigGroup("oneclickadamplanks")
 public interface OneClickAdamPlanksConfig extends Config
-{
+{//
     @ConfigItem(
             position = 0,
             keyName = "stopmisclicks",

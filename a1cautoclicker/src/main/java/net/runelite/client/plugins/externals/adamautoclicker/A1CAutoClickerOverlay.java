@@ -15,16 +15,16 @@ import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 
-class AdamAutoClickerOverlay extends Overlay
+class A1CAutoClickerOverlay extends Overlay
 {
 	private static final Color FLASH_COLOR = new Color(255, 0, 0, 70);
 	private final Client client;
-	private final AdamAutoClick plugin;
-	private final AdamAutoClickConfig config;
+	private final A1CAutoClick plugin;
+	private final A1CAutoClickConfig config;
 	private int timeout;
 
 	@Inject
-	AdamAutoClickerOverlay(Client client, AdamAutoClick plugin, AdamAutoClickConfig config)
+	A1CAutoClickerOverlay(Client client, A1CAutoClick plugin, A1CAutoClickConfig config)
 	{
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ALWAYS_ON_TOP);

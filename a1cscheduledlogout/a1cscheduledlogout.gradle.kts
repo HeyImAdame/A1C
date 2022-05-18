@@ -1,8 +1,7 @@
-import ProjectVersions.rlVersion
+import ProjectVersions.rlVersion;
 
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
- * Copyright (c) 2019 Ganom <https://github.com/Ganom>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,21 +27,19 @@ import ProjectVersions.rlVersion
 
 version = "1337.0.0"
 
-project.extra["PluginName"] = "A1C AutoClicker"
-project.extra["PluginDescription"] = "The better clicks"
+project.extra["PluginName"] = "A1C Scheduled Logout" // This is the name that is used in the external plugin manager panel
+project.extra["PluginDescription"] = "Automatically logs out after inputted minutes" // This is the description that is used in the external plugin manager panel
 
 dependencies {
-//    implementation(project(":A1CExtUtils"))
-annotationProcessor(Libraries.lombok)
-annotationProcessor(Libraries.pf4j)
+    annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
 
-compileOnly("com.openosrs:runelite-api:$rlVersion")
-compileOnly("com.openosrs:runelite-client:$rlVersion")
+    compileOnly("com.openosrs:runelite-api:$rlVersion+")
+    compileOnly("com.openosrs:runelite-client:$rlVersion+")
 
-compileOnly(Libraries.guice)
-compileOnly(Libraries.lombok)
-compileOnly(Libraries.pf4j)
-compileOnly(Libraries.rxjava)
+    compileOnly(Libraries.guice)
+    compileOnly(Libraries.lombok)
+    compileOnly(Libraries.pf4j)
 }
 
 tasks {

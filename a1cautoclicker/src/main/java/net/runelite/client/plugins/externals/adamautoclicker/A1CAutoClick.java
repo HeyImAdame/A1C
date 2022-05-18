@@ -32,21 +32,22 @@ import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-	name = "A1C Auto Clicker",
+	name = "A1C AutoClicker",
+	description = "The better clicks",
 	tags = "Adam",
 	enabledByDefault = false
 )
 @Slf4j
-public class AdamAutoClick extends Plugin
+public class A1CAutoClick extends Plugin
 {
 	@Inject
 	private Client client;
 
 	@Inject
-	private AdamAutoClickConfig config;
+	private A1CAutoClickConfig config;
 
 	@Inject
-	private AdamAutoClickerOverlay overlay;
+	private A1CAutoClickerOverlay overlay;
 
 	@Inject
 	private OverlayManager overlayManager;
@@ -66,9 +67,9 @@ public class AdamAutoClick extends Plugin
 	private boolean flash;
 
 	@Provides
-	AdamAutoClickConfig getConfig(ConfigManager configManager)
+	A1CAutoClickConfig getConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(AdamAutoClickConfig.class);
+		return configManager.getConfig(A1CAutoClickConfig.class);
 	}
 
 	@Override

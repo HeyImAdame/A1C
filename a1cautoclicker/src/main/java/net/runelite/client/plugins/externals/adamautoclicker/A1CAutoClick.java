@@ -74,7 +74,7 @@ public class A1CAutoClick extends Plugin
 
 	@Override
 	protected void startUp()
-	{
+	{//
 		overlayManager.add(overlay);
 		keyManager.registerKeyListener(hotkeyListener);
 		executorService = Executors.newSingleThreadExecutor();

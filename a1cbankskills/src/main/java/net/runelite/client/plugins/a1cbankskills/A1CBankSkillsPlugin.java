@@ -65,7 +65,7 @@ public class A1CBankSkillsPlugin extends Plugin
     private int craftNum;
 
     @Override
-    protected void startUp() throws Exception
+    protected void startUp()
     {
         timeout = 0;
         skillStage = 0;
@@ -73,7 +73,15 @@ public class A1CBankSkillsPlugin extends Plugin
         id2 = 0;
         craftNum = 0;
     }
-
+    @Override
+    protected void shutDown()
+    {
+        timeout = 0;
+        skillStage = 0;
+        id1 = 0;
+        id2 = 0;
+        craftNum = 0;
+    }
     @Subscribe
     public void onGameTick(GameTick event)
     {
@@ -95,10 +103,6 @@ public class A1CBankSkillsPlugin extends Plugin
             && client.getLocalPlayer().getAnimation() != 6294)
         {
             timeout = 4;
-        }
-        if (getInventoryItem(id1) == null && !isbankOpen())
-        {
-            timeout = 0;
         }
     }
     @Subscribe
@@ -531,20 +535,29 @@ public class A1CBankSkillsPlugin extends Plugin
     {
         if (config.skill() == Types.Skill.Use14on14)
         {
-            id1 = config.use14on14id1();
-            id2 = config.use14on14id2();
+            if (config.product() == Types.Product.Custom)
+            {
+                id2 = config.customproductID();
+                id1 = config.customingredientID1();
+                id2 = config.customingredientID2();
+            }
+            id2 = config.product().id;
+            id1 = config.product().ingredientid1;
+            id2 = config.product().ingredientid2;
             craftNum = config.craftNum14on14();
         }
         if (config.skill() == Types.Skill.Use1on27)
         {
-            id1 = config.use1on27id1();
-            id2 = config.use1on27id2();
+            if (config.product() == Types.Product.Custom)
+            {
+                id2 = config.customproductID();
+                id1 = config.customingredientID1();
+                id2 = config.customingredientID2();
+            }
+            id2 = config.product().id;
+            id1 = config.product().ingredientid1;
+            id2 = config.product().ingredientid2;
             craftNum = config.craftNum1on27();
-        }
-        if (config.skill() == Types.Skill.Humidify)
-        {
-            id1 = config.humidifyid1();
-            id2 = config.humidifyid2();
         }
     }
     private void sendGameMessage(String message)

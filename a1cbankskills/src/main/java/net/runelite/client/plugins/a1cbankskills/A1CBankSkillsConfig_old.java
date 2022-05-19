@@ -5,7 +5,7 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigSection;
 
 @ConfigGroup("a1cbankskills")
-public interface A1CBankSkillsConfig extends Config
+public interface A1CBankSkillsConfig_old extends Config
 {
 
     @ConfigSection(
@@ -41,59 +41,94 @@ public interface A1CBankSkillsConfig extends Config
 
     @ConfigItem(
             position = 30,
-            keyName = "product",
-            name = "Craft",
-            description = "The item to craft",
-            section = craftsection
-    )
- default Types.Product product()    {
-        return Types.Product.SUPER_ATTACK;
-    }
-
-    @ConfigItem(
-            position = 31,
-            keyName = "productID",
-            name = "Product (ID)",
-            description = "ID of crafted item",
+            keyName = "first14on14",
+            name = "Use this 14 (ID)",
+            description = "The left click use item ID",
             hidden = true,
             unhide = "skill",
-            unhideValue = "Custom",
+            unhideValue = "Use14on14",
             section = craftsection
     )
-    default int customproductID()
+    default int use14on14id1()
     {
         return 2970;
     }
 
     @ConfigItem(
-            position = 32,
-            keyName = "ingredient1",
-            name = "Ingredient 1 ID",
-            description = "ID of ingredient 1",
+            position = 40,
+            keyName = "second14on14",
+            name = "On this 14 (ID)",
+            description = "The item ID that is used on",
             hidden = true,
             unhide = "skill",
-            unhideValue = "Custom",
+            unhideValue = "Use14on14",
             section = craftsection
     )
-    default int customingredientID1()
-    {
-        return 2970;
-    }
-
-    @ConfigItem(
-            position = 33,
-            keyName = "ingredient2",
-            name = "Ingredient 2 ID",
-            description = "ID of ingredient 2",
-            hidden = true,
-            unhide = "skill",
-            unhideValue = "Custom",
-            section = craftsection
-    )
-    default int customingredientID2()
+    default int use14on14id2()
     {
         return 103;
     }
+
+    @ConfigItem(
+            position = 30,
+            keyName = "first1on27",
+            name = "Use this 1  (ID)",
+            description = "The left click use item ID",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Use1on27",
+            section = craftsection
+    )
+    default int use1on27id1()
+    {
+        return 2970;
+    }
+
+    @ConfigItem(
+            position = 40,
+            keyName = "second1on27",
+            name = "On this 27  (ID)",
+            description = "The item ID that is used on",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Use1on27",
+            section = craftsection
+    )
+    default int use1on27id2()
+    {
+        return 103;
+    }
+
+    @ConfigItem(
+            position = 45,
+            keyName = "humidify1",
+            name = "Single rune/rune pouch",
+            description = "ID of rune or rune pouch",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Humidify",
+            section = craftsection
+    )
+    default int humidifyid1()
+    {
+        return 9075;
+    }
+
+    @ConfigItem(
+            position = 46,
+            keyName = "humidify2",
+            name = "Vessel to fill with water",
+            description = "ID for vessel",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Humidify",
+            section = craftsection
+    )
+    default int humidifyid2()
+    {
+        return 1935;
+    }
+
     @ConfigItem(
             position = 50,
             keyName = "craftmenunum14on14",

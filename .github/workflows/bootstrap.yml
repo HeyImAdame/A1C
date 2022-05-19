@@ -1,14 +1,11 @@
-name: Plugins - CI (Push)
+name: Plugins - Bootstrap
 
-on:
-  push:
-    branches:
-      - master
+on: workflow_dispatch
 
 jobs:
-  build:
+  bootstrap:
     runs-on: ubuntu-latest
-    name: Build
+    name: Bootstrap
 
     steps:
       - name: Checkout Plugins
@@ -48,3 +45,14 @@ jobs:
 
       - name: Building plugins
         run: ./gradlew build
+
+      - name: Bootstrap plugins
+        run: ./gradlew bootstrapPlugins
+
+      - name: Commit and Push bootstrap.
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: Automatic Bootstrap
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
+          add: "['./plugins.json', './release/*.jar']"

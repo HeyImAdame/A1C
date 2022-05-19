@@ -1,304 +1,190 @@
-name: HeyImAdame - CI (PR)
+name: Owain94 - CI (PR)
 
 on:
   pull_request:
     types: ['opened', 'edited', 'reopened', 'synchronize']
 
 jobs:
+  pr-lint:
+    name: PR title
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: PR title lint
+        if: github.event_name == 'pull_request'
+        uses: MorrisonCole/pr-lint-action@v1.6.1
+        with:
+          title-regex: '^([\w-/]+): \w+'
+          on-failed-regex-fail-action: false
+          on-failed-regex-request-changes: false
+          on-failed-regex-create-review: true
+          on-failed-regex-comment: "Your PR title should match the following regex: `%regex%`!"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
   validate:
     name: Validate gradle wrapper
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/checkout@v2.4.2
+      - uses: gradle/wrapper-validation-action@v1.0.4
 
   build:
     name: Build
-    needs: [validate]
+    needs: [pr-lint, validate]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v2.4.2
         with:
-          java-version: 11
+          path: Owain94-external-plugins
 
-      - uses: actions/checkout@v1
-
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.4.2
         with:
           repository: open-osrs/runelite
           ref: master
+          path: OpenOSRS
 
-      - uses: actions/checkout@v1
-        with:
-          repository: open-osrs/plugins
-          ref: master
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Make gradlew executable (client)
-        run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/runelite
-
-      - name: Assembling client
-        run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
-
-      - name: Building client
-        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
-
-      - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
-
-      - name: Make gradlew executable (plugins)
-        run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Assembling plugins
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Building plugins
-        run: ./gradlew --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Upload plugins artifacts to local maven
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Assembling plugins
-        run: ./gradlew assemble --console=plain
-
-      - name: Building plugins
-        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-
-  test:
-    name: test
-    needs: [validate]
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3.1.1
         with:
-          java-version: 11
-
-      - uses: actions/checkout@v1
-
-      - uses: actions/checkout@v1
-        with:
-          repository: open-osrs/runelite
-          ref: master
-
-      - uses: actions/checkout@v1
-        with:
-          repository: open-osrs/plugins
-          ref: master
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Building client
-        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain --stacktrace --info
+        working-directory: OpenOSRS
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
-
-      - name: Make gradlew executable (plugins)
-        run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Assembling plugins
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Building plugins
-        run: ./gradlew --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Upload plugins artifacts to local maven
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
+        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal --console=plain
+        working-directory: OpenOSRS
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+        working-directory: Owain94-external-plugins
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
+        working-directory: Owain94-external-plugins
 
-      - name: Testing plugins
-        run: ./gradlew test --stacktrace -x test -x checkstyleMain --console=plain
+      - name: Building plugins
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain --stacktrace --info
+        working-directory: Owain94-external-plugins
+
 
   checkstyleMain:
     name: Checkstyle main
-    needs: [validate]
+    needs: [pr-lint, validate]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v2.4.2
         with:
-          java-version: 11
+          path: Owain94-external-plugins
 
-      - uses: actions/checkout@v1
-
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.4.2
         with:
           repository: open-osrs/runelite
           ref: master
+          path: OpenOSRS
 
-      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3.1.1
         with:
-          repository: open-osrs/plugins
-          ref: master
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Building client
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
-
-      - name: Make gradlew executable (plugins)
-        run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Assembling plugins
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Building plugins
-        run: ./gradlew --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Upload plugins artifacts to local maven
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
+        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal --console=plain
+        working-directory: OpenOSRS
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+        working-directory: Owain94-external-plugins
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
+        working-directory: Owain94-external-plugins
 
       - name: Checking plugins code conventions (Main)
         run: ./gradlew checkstyleMain --console=plain
+        working-directory: Owain94-external-plugins
 
   checkstyleTest:
     name: Checkstyle test
-    needs: [validate]
+    needs: [pr-lint, validate]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v2.4.2
         with:
-          java-version: 11
+          path: Owain94-external-plugins
 
-      - uses: actions/checkout@v1
-
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.4.2
         with:
           repository: open-osrs/runelite
           ref: master
+          path: OpenOSRS
 
-      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3.1.1
         with:
-          repository: open-osrs/plugins
-          ref: master
-
-      - uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Building client
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
+        working-directory: OpenOSRS
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/plugins-source/runelite
-
-      - name: Make gradlew executable (plugins)
-        run: chmod +x ./gradlew
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Assembling plugins
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Building plugins
-        run: ./gradlew --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
-
-      - name: Upload plugins artifacts to local maven
-        run: ./gradlew --console=plain
-        working-directory: /home/runner/work/plugins-source/plugins
+        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal --console=plain
+        working-directory: OpenOSRS
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+        working-directory: Owain94-external-plugins
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
+        working-directory: Owain94-external-plugins
 
       - name: Checking plugins code conventions (Test)
         run: ./gradlew checkstyleTest --console=plain
+        working-directory: Owain94-external-plugins
 
   bump:
     name: Check version numbers
-    needs: [validate]
+    needs: [pr-lint, validate]
     runs-on: ubuntu-latest
 
     steps:
@@ -314,37 +200,45 @@ jobs:
 
       - id: changedFiles
         name: Changed files exporter
-        uses: futuratrepadeira/changed-files@v3.0.0
+        uses: futuratrepadeira/changed-files@v3.3.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v2.4.2
         with:
-          java-version: 11
+          path: Owain94-external-plugins
 
-      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3.1.1
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+          cache: 'gradle'
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+        working-directory: Owain94-external-plugins
 
       - name: Bump version numbers
         id: bumpNewChanged
         if: steps.changedFiles.outputs.files_created != '' && steps.changedFiles.outputs.files_updated != ''
         run: |
           ./gradlew bumpVersion --newFiles="${{ steps.changedFiles.outputs.files_created }}" --changedFiles="${{ steps.changedFiles.outputs.files_updated }}" --console=plain
+        working-directory: Owain94-external-plugins
 
       - name: Bump version numbers
         id: bumpChanged
         if: steps.changedFiles.outputs.files_created == '' && steps.changedFiles.outputs.files_updated != ''
         run: |
           ./gradlew bumpVersion --changedFiles="${{ steps.changedFiles.outputs.files_updated }}" --console=plain
+        working-directory: Owain94-external-plugins
 
       - name: Bump version numbers
         id: bumpNew
         if: steps.changedFiles.outputs.files_created != '' && steps.changedFiles.outputs.files_updated == ''
         run: |
           ./gradlew bumpVersion --newFiles="${{ steps.changedFiles.outputs.files_created }}" --console=plain
+        working-directory: Owain94-external-plugins
 
       - name: Detect changes
         id: detectChanges
@@ -356,15 +250,16 @@ jobs:
 
               exit 1
           fi
+        working-directory: Owain94-external-plugins
 
   approve:
     name: Approve
-    needs: [build, test, checkstyleMain, checkstyleTest, bump]
+    needs: [build, checkstyleMain, checkstyleTest, bump]
     runs-on: ubuntu-latest
 
     steps:
       - name: Approve pull request
         if: github.event_name == 'pull_request' && github.actor == 'OpenOSRS'
-        uses: hmarr/auto-approve-action@v2.0.0
+        uses: hmarr/auto-approve-action@v2.2.1
         with:
-          github-token: ${{ secrets.HeyImAdame }}
+          github-token: ${{ secrets.Owain }}

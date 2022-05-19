@@ -1,9 +1,6 @@
 name: HeyImAdame - CI (Push)
 
-on:
-  push:
-    branches:
-      - master
+on: workflow_dispatch
 
 jobs:
   build:

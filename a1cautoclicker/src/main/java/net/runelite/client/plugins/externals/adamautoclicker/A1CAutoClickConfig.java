@@ -12,7 +12,7 @@ import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.config.Range;
 
-@ConfigGroup("autoClickerConfig")
+@ConfigGroup("a1cautoclicker")
 public interface A1CAutoClickConfig extends Config
 {
 	@ConfigSection(

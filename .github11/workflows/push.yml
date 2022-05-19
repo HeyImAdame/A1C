@@ -1,4 +1,4 @@
-name: HeyImAdame - CI (Push)
+name: Owain94 - CI (Push)
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: A1C-source
+          path: Owain94-external-plugins
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -46,16 +46,16 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
 
       - name: Building plugins
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
   checkstyleMain:
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: A1C-source
+          path: Owain94-external-plugins
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -97,15 +97,15 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Checking plugins code conventions (Main)
         run: ./gradlew checkstyleMain --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
   checkstyleTest:
     runs-on: ubuntu-latest
@@ -114,7 +114,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: A1C-source
+          path: Owain94-external-plugins
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -147,15 +147,15 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Checking plugins code conventions (Test)
         run: ./gradlew checkstyleTest --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
   update_draft_release:
     name: Draft release
@@ -174,7 +174,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: A1C-source
+          path: Owain94-external-plugins
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -207,30 +207,30 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Building plugins
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - name: Bootstrapping plugins
         run: ./gradlew bootstrapPlugins --stacktrace --console=plain
-        working-directory: A1C-source
+        working-directory: Owain94-external-plugins
 
       - uses: actions/checkout@v2.4.2
         with:
-          repository: HeyImAdame/A1C
+          repository: Owain94/OpenOSRS-external-plugins-hosting
           ref: master
-          path: A1C
-          token: ${{ secrets.HeyImAdame }}
+          path: Owain94-external-plugins-hosting
+          token: ${{ secrets.Owain }}
 
       - name: Copy bootstrap
-        run: cp -af /home/runner/work/A1C-source/A1C-source/A1C/build/bootstrap/. /home/runner/work/A1C-source/A1C-source/A1C
-        working-directory: A1C
+        run: cp -af /home/runner/work/OpenOSRS-external-plugins/OpenOSRS-external-plugins/Owain94-external-plugins/build/bootstrap/. /home/runner/work/OpenOSRS-external-plugins/OpenOSRS-external-plugins/Owain94-external-plugins-hosting
+        working-directory: Owain94-external-plugins-hosting
 
       - name: Commit bootstrap
         run: |
@@ -239,11 +239,11 @@ jobs:
           || git -c user.name="GitHub" -c user.email="noreply@github.com" commit \
             --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
             -m "Automatic plugin bootstrap"
-        working-directory: A1C
+        working-directory: Owain94-external-plugins-hosting
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ secrets.HeyImAdame }}
-          directory: /home/runner/work/A1C-source/A1C-source/A1C
-          repository: HeyImAdame/A1C
+          github_token: ${{ secrets.Owain }}
+          directory: /home/runner/work/OpenOSRS-external-plugins/OpenOSRS-external-plugins/Owain94-external-plugins-hosting
+          repository: Owain94/OpenOSRS-external-plugins-hosting

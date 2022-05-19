@@ -1,20 +1,20 @@
-import com.savvasdalkitsis.jsonmerger.JsonMerger
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.TaskAction
-import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.get
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.File
-import java.nio.file.Paths
-import java.security.MessageDigest
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import com.savvasdalkitsis.jsonmerger.JsonMerger;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.TaskAction;
+import org.gradle.kotlin.dsl.extra;
+import org.gradle.kotlin.dsl.get;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.File;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import kotlin.collections.ArrayList;
 
 
 open class BootstrapTask : DefaultTask() {

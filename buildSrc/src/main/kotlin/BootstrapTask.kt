@@ -1,4 +1,6 @@
 import com.savvasdalkitsis.jsonmerger.JsonMerger
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.gradle.api.DefaultTask
@@ -67,8 +69,8 @@ open class BootstrapTask : DefaultTask() {
                             "name" to it.project.extra.get("PluginName"),
                             "id" to nameToId(it.project.extra.get("PluginName") as String),
                             "description" to it.project.extra.get("PluginDescription"),
-                            "provider" to it.project.extra.get("PluginProvider"),
-                            "projectUrl" to it.project.extra.get("ProjectUrl"),
+                            "provider" to "HeyImAdame",
+                            "projectUrl" to "ur mom",
                             "releases" to releases.toTypedArray()
                     ).jsonObject()
 
@@ -89,7 +91,8 @@ open class BootstrapTask : DefaultTask() {
                         pluginAdded = true
                     }
 
-                    if (!pluginAdded) {
+                    if (!pluginAdded)
+                    {
                         plugins.add(pluginObject)
                     }
 

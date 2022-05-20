@@ -23,13 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "HeyImAdame"
+rootProject.name = "HeyImAdame Plugins"
 
-include(":aonecscheduledlogout")
-include(":acautoclicker")
-include(":aonecbankskills")
-include(":aonecbloods")
-include(":aonecplankmake")
+include(":a1cautoclicker")
+include(":a1cbankskills")
+include(":a1cbloods")
+include(":a1cplankmake")
+include(":a1cscheduledlogout")
 
 for (project in rootProject.children) {
     project.apply {

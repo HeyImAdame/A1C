@@ -16,21 +16,23 @@ open class VersionsTask : DefaultTask() {
     @Suppress("UnstableApiUsage")
     @set:Option(option = "major", description = "Bump major version")
     @get:Input
-    var major: Boolean = false
+    var major: Boolean = true
 
     @Suppress("UnstableApiUsage")
     @set:Option(option = "minor", description = "Bump minor version")
     @get:Input
-    var minor: Boolean = true
+    var minor: Boolean = false
 
     @Suppress("UnstableApiUsage")
     @set:Option(option = "patch", description = "Bump patch version")
     @get:Input
     var patch: Boolean = false
 
-    private fun readFile(fileName: Path): List<String> = fileName.toFile().useLines { it.toList() }
+    private fun readFile(fileName: Path): List<String>
+            = fileName.toFile().useLines { it.toList() }
 
-    private fun writeFile(fileName: Path, content: List<String>) = fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
+    private fun writeFile(fileName: Path, content: List<String>)
+            = fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
 
     private fun bumpVersion(path: Path) {
         val content = mutableListOf<String>()
@@ -51,7 +53,9 @@ open class VersionsTask : DefaultTask() {
                 }
 
                 content.add("version = \"$version\"")
-            } else {
+            }
+            else
+            {
                 content.add(it)
             }
         }

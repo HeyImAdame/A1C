@@ -20,7 +20,7 @@ allprojects {
 subprojects {
     group = "com.openosrs.externals"
 
-    project.extra["PluginProvider"] = "Adam"
+    project.extra["PluginProvider"] = "xKylee"
     project.extra["ProjectUrl"] = "https://discord.gg/mgXhVDUEUq"
     project.extra["PluginLicense"] = "3-Clause BSD License"
 

@@ -1,15 +1,23 @@
-name: Plugins - Bootstrap
+name: Plugins - CI (Push)
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - master
 
 jobs:
-  bootstrap:
+  build:
     runs-on: ubuntu-latest
-    name: Bootstrap
+    name: Build
 
     steps:
       - name: Checkout Plugins
         uses: actions/checkout@v3
+
+      - uses: actions/checkout@v1
+        with:
+          repository: HeyImAdame/A1C-source
+          ref: master
 
       - name: Checkout Client
         uses: actions/checkout@v3
@@ -46,13 +54,27 @@ jobs:
       - name: Building plugins
         run: ./gradlew build
 
-      - name: Bootstrap plugins
-        run: ./gradlew bootstrapPlugins
 
-      - name: Commit and Push bootstrap.
-        uses: EndBug/add-and-commit@v9
+
+
+      - name: Bootstrapping plugins
+        run: ./gradlew bootstrapPlugins --stacktrace --console=plain
+
+      - name: Copy bootstrap
+        run: cp -af /home/runner/work/A1C-source/A1C-source/build/bootstrap/. /home/runner/work/A1C-source/A1C/
+
+      - name: Commit bootstrap
+        run: |
+          git add $(git ls-files -o --exclude-standard) plugins.json
+          git diff-index --quiet HEAD \
+          || git -c user.name="GitHub" -c user.email="noreply@github.com" commit \
+            --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
+            -m "Automatic plugin bootstrap"
+        working-directory: /home/runner/work/A1C-source/A1C
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          message: Automatic Bootstrap
-          committer_name: GitHub Actions
-          committer_email: actions@github.com
-          add: "['./plugins.json', './release/*.jar']"
+          github_token: ${{ secrets.HeyImAdame }}
+          directory: /home/runner/work/A1C-source/A1C
+          repository: HeyImAdame/A1C

@@ -1,10 +1,10 @@
-import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.TaskAction;
-import org.gradle.api.tasks.options.Option;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.options.Option
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 
 open class VersionTask : DefaultTask() {
 
@@ -24,23 +24,20 @@ open class VersionTask : DefaultTask() {
 
     private fun filterPath(path: String): Boolean {
         val p = splitPath(path)
-        val count = path.filter{ it == '/' }
+        val count = path.filter { it == '/' }
                 .groupingBy { it }
                 .eachCount()
                 .getOrElse('/') { 0 }
 
-        if (count < 9 || p.startsWith(".") || p.startsWith("buildsrc"))
-        {
+        if (count < 9 || p.startsWith(".") || p.startsWith("buildsrc")) {
             return false
         }
         return true
     }
 
-    private fun readFile(fileName: Path): List<String>
-            = fileName.toFile().useLines { it.toList() }
+    private fun readFile(fileName: Path): List<String> = fileName.toFile().useLines { it.toList() }
 
-    private fun writeFile(fileName: Path, content: List<String>)
-            = fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
+    private fun writeFile(fileName: Path, content: List<String>) = fileName.toFile().writeText(content.joinToString(separator = System.lineSeparator()))
 
     private fun bumpVersion(path: Path) {
         val content = mutableListOf<String>()
@@ -50,9 +47,7 @@ open class VersionTask : DefaultTask() {
                 val version = SemVer.parse(it.replace("\"", "").replace("version = ", ""))
                 version.patch += 1
                 content.add("version = \"$version\"")
-            }
-            else
-            {
+            } else {
                 content.add(it)
             }
         }

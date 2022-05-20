@@ -1,5 +1,5 @@
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.JSONArray
+import org.json.JSONObject
 
 class JsonBuilder() {
     private var json = JSONObject()
@@ -28,7 +28,8 @@ class JsonBuilder() {
             is Long -> json.put(key, value)
             is Float -> json.put(key, value)
             is Double -> json.put(key, value)
-            else -> {}
+            else -> {
+            }
         }
 
         return this
@@ -38,9 +39,11 @@ class JsonBuilder() {
         val jsonArray = JSONArray()
         items.forEach {
             when (it) {
-                is String,is Long,is Int, is Boolean -> jsonArray.put(it)
+                is String, is Long, is Int, is Boolean -> jsonArray.put(it)
                 is JsonBuilder -> jsonArray.put(it.json)
-                else -> try {jsonArray.put(it)} catch (ignored:Exception) {
+                else -> try {
+                    jsonArray.put(it)
+                } catch (ignored: Exception) {
 
                 }
             }

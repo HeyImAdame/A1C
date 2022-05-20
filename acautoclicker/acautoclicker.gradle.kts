@@ -31,16 +31,16 @@ project.extra["PluginName"] = "A1C AutoClicker"
 project.extra["PluginDescription"] = "The better clicks"
 
 dependencies {
-annotationProcessor(Libraries.lombok)
-annotationProcessor(Libraries.pf4j)
+    annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
 
-compileOnly("com.openosrs:runelite-api:$rlVersion")
-compileOnly("com.openosrs:runelite-client:$rlVersion")
+    compileOnly("com.openosrs:runelite-api:$rlVersion")
+    compileOnly("com.openosrs:runelite-client:$rlVersion")
 
-compileOnly(Libraries.guice)
-compileOnly(Libraries.lombok)
-compileOnly(Libraries.pf4j)
-compileOnly(Libraries.rxjava)
+    compileOnly(Libraries.guice)
+    compileOnly(Libraries.lombok)
+    compileOnly(Libraries.pf4j)
+    compileOnly(Libraries.rxjava)
 }
 
 tasks {

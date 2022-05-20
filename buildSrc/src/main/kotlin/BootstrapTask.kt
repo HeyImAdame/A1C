@@ -1,20 +1,18 @@
-import com.savvasdalkitsis.jsonmerger.JsonMerger;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.TaskAction;
-import org.gradle.kotlin.dsl.extra;
-import org.gradle.kotlin.dsl.get;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.File;
-import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import kotlin.collections.ArrayList;
+import com.savvasdalkitsis.jsonmerger.JsonMerger
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.extra
+import org.gradle.kotlin.dsl.get
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
+import java.nio.file.Paths
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 open class BootstrapTask : DefaultTask() {
@@ -30,7 +28,7 @@ open class BootstrapTask : DefaultTask() {
     private fun getBootstrap(): JSONArray? {
         val client = OkHttpClient()
 
-        val url = "https://raw.githubusercontent.com/HeyImAdame/A1C/master/plugins.json"
+        val url = "https://raw.githubusercontent.com/ganom/ExternalPlugins/master/plugins.json"
         val request = Request.Builder()
                 .url(url)
                 .build()
@@ -61,7 +59,7 @@ open class BootstrapTask : DefaultTask() {
                             "version" to it.project.version,
                             "requires" to ProjectVersions.apiVersion,
                             "date" to formatDate(Date()),
-                            "url" to "https://github.com/HeyImAdame/A1C/blob/master/release/${it.project.name}-${it.project.version}.jar?raw=true",
+                            "url" to "https://github.com/Ganom/ExternalPlugins/blob/master/release/${it.project.name}-${it.project.version}.jar?raw=true",
                             "sha512sum" to hash(plugin.readBytes())
                     ))
 
@@ -69,8 +67,8 @@ open class BootstrapTask : DefaultTask() {
                             "name" to it.project.extra.get("PluginName"),
                             "id" to nameToId(it.project.extra.get("PluginName") as String),
                             "description" to it.project.extra.get("PluginDescription"),
-                            "provider" to "HeyImAdame",
-                            "projectUrl" to "https://discord.gg/zBx3pjHv",
+                            "provider" to it.project.extra.get("PluginProvider"),
+                            "projectUrl" to it.project.extra.get("ProjectUrl"),
                             "releases" to releases.toTypedArray()
                     ).jsonObject()
 
@@ -91,8 +89,7 @@ open class BootstrapTask : DefaultTask() {
                         pluginAdded = true
                     }
 
-                    if (!pluginAdded)
-                    {
+                    if (!pluginAdded) {
                         plugins.add(pluginObject)
                     }
 

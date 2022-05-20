@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: OpenOSRS-plugins
+          path: A1C-source
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -46,15 +46,15 @@ jobs:
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Building plugins
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
   test:
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: OpenOSRS-plugins
+          path: A1C-source
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -96,15 +96,15 @@ jobs:
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Testing plugins
         run: ./gradlew test --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
   checkstyleMain:
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: OpenOSRS-plugins
+          path: A1C-source
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -146,15 +146,15 @@ jobs:
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Checking plugins code conventions (Main)
         run: ./gradlew checkstyleMain --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
   checkstyleTest:
     runs-on: ubuntu-latest
@@ -163,7 +163,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: OpenOSRS-plugins
+          path: A1C-source
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -196,15 +196,15 @@ jobs:
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Checking plugins code conventions (Test)
         run: ./gradlew checkstyleTest --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
   update_draft_release:
     name: Draft release
@@ -223,7 +223,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
-          path: OpenOSRS-plugins
+          path: A1C-source
 
       - uses: actions/checkout@v2.4.2
         with:
@@ -256,30 +256,30 @@ jobs:
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Building plugins
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - name: Bootstrapping plugins
         run: ./gradlew bootstrapPlugins --stacktrace --console=plain
-        working-directory: OpenOSRS-plugins
+        working-directory: A1C-source
 
       - uses: actions/checkout@v2.4.2
         with:
           repository: HeyImAdame/A1C
           ref: master
-          path: OpenOSRS-plugins-hosting
-          token: ${{ secrets.Owain }}
+          path: A1C
+          token: ${{ secrets.HeyImAdame }}
 
       - name: Copy bootstrap
-        run: cp -af /home/runner/work/plugins/plugins/OpenOSRS-plugins/build/bootstrap/. /home/runner/work/plugins/plugins/OpenOSRS-plugins-hosting
-        working-directory: OpenOSRS-plugins-hosting
+        run: cp -af /home/runner/work/A1C-source/A1C-source/A1C-source/build/bootstrap/. /home/runner/work/A1C-source/A1C-source/A1C
+        working-directory: A1C
 
       - name: Commit bootstrap
         run: |
@@ -288,11 +288,11 @@ jobs:
           || git -c user.name="GitHub" -c user.email="noreply@github.com" commit \
             --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
             -m "Automatic plugin bootstrap"
-        working-directory: OpenOSRS-plugins-hosting
+        working-directory: A1C
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ secrets.Owain }}
-          directory: /home/runner/work/A1C-source/A1C-source/OpenOSRS-plugins-hosting
+          github_token: ${{ secrets.HeyImAdame }}
+          directory: /home/runner/work/A1C-source/A1C-source/A1C
           repository: HeyImAdame/A1C

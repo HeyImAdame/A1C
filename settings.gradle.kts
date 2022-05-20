@@ -25,11 +25,11 @@
 
 rootProject.name = "HeyImAdame"
 
-include(":a1cscheduledlogout")
-include(":a1cautoclicker")
-include(":a1cbankskills")
-include(":a1cbloods")
-include(":a1cplankmake")
+include(":aonecscheduledlogout")
+include(":aonecautoclicker")
+include(":aonecbankskills")
+include(":aonecbloods")
+include(":aonecplankmake")
 
 for (project in rootProject.children) {
     project.apply {

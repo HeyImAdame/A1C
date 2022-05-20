@@ -11,51 +11,146 @@ jobs:
     name: Build
 
     steps:
-      - name: Checkout Plugins
-        uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - uses: actions/checkout@v1
 
       - uses: actions/checkout@v1
         with:
-          repository: HeyImAdame/A1C-source
-          ref: master
-
-      - name: Checkout Client
-        uses: actions/checkout@v3
-        with:
           repository: open-osrs/runelite
           ref: master
-          path: open-osrs
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v1
         with:
-          distribution: 'adopt'
-          java-version: 11
-          cache: 'gradle'
+          repository: open-osrs/plugins
+          ref: master
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable (client)
+        run: chmod +x ./gradlew
+        working-directory: /home/runner/work/A1C-source/runelite
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: open-osrs
+        working-directory: /home/runner/work/A1C-source/runelite
 
       - name: Building client
-        run: ./gradlew build -x test -x checkstyleMain --console=plain
-        working-directory: open-osrs
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: /home/runner/work/A1C-source/runelite
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew publishToMavenLocal --console=plain
-        working-directory: open-osrs
+        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
+        working-directory: /home/runner/work/A1C-source/runelite
 
       - name: Make gradlew executable (plugins)
+        run: chmod +x ./gradlew
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Assembling plugins
+        run: ./gradlew --console=plain
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Building plugins
+        run: ./gradlew -x test -x checkstyleMain --console=plain
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Upload plugins artifacts to local maven
+        run: ./gradlew --console=plain
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Make gradlew executable
         run: chmod +x ./gradlew
 
       - name: Assembling plugins
         run: ./gradlew assemble --console=plain
 
       - name: Building plugins
-        run: ./gradlew build -x test -x checkstyleMain
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
 
+  bootstrap:
+    runs-on: ubuntu-latest
+    needs: [build]
+    name: Bootstrap
 
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
 
+      - uses: actions/checkout@v1
+
+      - uses: actions/checkout@v1
+        with:
+          repository: open-osrs/runelite
+          ref: master
+
+      - uses: actions/checkout@v1
+        with:
+          repository: open-osrs/plugins
+          ref: master
+
+      - uses: actions/checkout@v1
+        with:
+          repository: HeyImAdame/A1C
+          ref: master
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable (client)
+        run: chmod +x ./gradlew
+        working-directory: /home/runner/work/A1C-source/runelite
+
+      - name: Assembling client
+        run: ./gradlew assemble --console=plain
+        working-directory: /home/runner/work/A1C-source/runelite
+
+      - name: Building client
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: /home/runner/work/A1C-source/runelite
+
+      - name: Upload client artifacts to local maven
+        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
+        working-directory: /home/runner/work/A1C-source/runelite
+
+      - name: Make gradlew executable (plugins)
+        run: chmod +x ./gradlew
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Assembling plugins
+        run: ./gradlew --console=plain
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Building plugins
+        run: ./gradlew --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Upload plugins artifacts to local maven
+        run: ./gradlew --console=plain
+        working-directory: /home/runner/work/A1C-source/plugins
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Assembling plugins
+        run: ./gradlew assemble --console=plain
+
+      - name: Building plugins
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
 
       - name: Bootstrapping plugins
         run: ./gradlew bootstrapPlugins --stacktrace --console=plain
@@ -65,6 +160,7 @@ jobs:
 
       - name: Commit bootstrap
         run: |
+          git add $(git ls-files -o --exclude-standard) plugins.json
           git diff-index --quiet HEAD \
           || git -c user.name="GitHub" -c user.email="noreply@github.com" commit \
             --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \

@@ -54,14 +54,19 @@ jobs:
       - name: Building plugins
         run: ./gradlew build -x test -x checkstyleMain
 
-
-
-
       - name: Bootstrapping plugins
         run: ./gradlew bootstrapPlugins --stacktrace --console=plain
 
+      - uses: actions/checkout@v2.4.2
+        with:
+          repository: HeyImAdame/A1C
+          ref: master
+          path: A1C
+          token: ${{ secrets.HeyImAdame }}
+
       - name: Copy bootstrap
         run: cp -af /home/runner/work/A1C-source/A1C-source/build/bootstrap/. /home/runner/work/A1C-source/A1C/
+        working-directory: A1C
 
       - name: Commit bootstrap
         run: |

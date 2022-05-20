@@ -52,7 +52,7 @@ jobs:
         run: ./gradlew assemble --console=plain
 
       - name: Building plugins
-        run: ./gradlew build
+        run: ./gradlew build -x test -x checkstyleMain
 
 
 

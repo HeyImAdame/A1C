@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
+          github_token: ${{ secrets.HeyImAdame }}
+          ref: master
           path: A1C-source
 
       - uses: actions/checkout@v2.4.2
@@ -63,6 +65,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
+          github_token: ${{ secrets.HeyImAdame }}
+          ref: master
           path: A1C-source
 
       - uses: actions/checkout@v2.4.2
@@ -113,6 +117,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
+          github_token: ${{ secrets.HeyImAdame }}
+          ref: master
           path: A1C-source
 
       - uses: actions/checkout@v2.4.2
@@ -163,6 +169,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
+          github_token: ${{ secrets.HeyImAdame }}
+          ref: master
           path: A1C-source
 
       - uses: actions/checkout@v2.4.2
@@ -223,6 +231,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.2
         with:
+          github_token: ${{ secrets.HeyImAdame }}
+          ref: master
           path: A1C-source
 
       - uses: actions/checkout@v2.4.2
@@ -278,8 +288,8 @@ jobs:
           token: ${{ secrets.HeyImAdame }}
 
       - name: Copy bootstrap
-        run: cp -af /home/runner/work/A1C-source/A1C-source/HeyImAdame/build/bootstrap/. /home/runner/work/A1C-source/A1C-source/HeyImAdame
-        working-directory: A1C
+        run: cp -af /home/runner/work/A1C-source/A1C-source/build/bootstrap/. /home/runner/work/A1C-source/A1C-source/A1C
+        working-directory: A1C-source
 
       - name: Commit bootstrap
         run: |
@@ -294,5 +304,5 @@ jobs:
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.HeyImAdame }}
-          directory: /home/runner/work/A1C-source/A1C-source/HeyImAdame
+          directory: /home/runner/work/A1C-source/A1C-source/A1C
           repository: HeyImAdame/A1C

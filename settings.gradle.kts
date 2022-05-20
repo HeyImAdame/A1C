@@ -26,7 +26,7 @@
 rootProject.name = "HeyImAdame"
 
 include(":aonecscheduledlogout")
-include(":aonecautoclicker")
+include(":acautoclicker")
 include(":aonecbankskills")
 include(":aonecbloods")
 include(":aonecplankmake")

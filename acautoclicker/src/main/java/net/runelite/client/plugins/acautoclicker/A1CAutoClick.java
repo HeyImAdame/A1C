@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.aonecautoclicker;
+package net.runelite.client.plugins.acautoclicker;
 import com.google.inject.Provides;
 import java.awt.Rectangle;
 import java.awt.Dimension;

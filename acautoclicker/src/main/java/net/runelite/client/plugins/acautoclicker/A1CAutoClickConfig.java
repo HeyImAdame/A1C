@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.aonecautoclicker;
+package net.runelite.client.plugins.acautoclicker;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
@@ -12,7 +12,7 @@ import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.config.Range;
 
-@ConfigGroup("aonecautoclicker")
+@ConfigGroup("acautoclicker")
 public interface A1CAutoClickConfig extends Config
 {
 	@ConfigSection(

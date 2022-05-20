@@ -1,4 +1,4 @@
-import ProjectVersions.rlVersion;
+import ProjectVersions.rlVersion
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
  * Copyright (c) 2019 Ganom <https://github.com/Ganom>

@@ -170,6 +170,6 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          GITHUB_TOKEN: ${{ secrets.Adame }}
+          github_token: ${{ secrets.ADAME }}
           directory: /home/runner/work/A1C-source/A1C
           repository: HeyImAdame/A1C

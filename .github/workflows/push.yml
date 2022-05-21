@@ -177,7 +177,7 @@ jobs:
         working-directory: /home/runner/work/A1C-source/A1C
 
       - name: Push changes
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.HeyImAdame }}
           directory: /home/runner/work/A1C-source/A1C

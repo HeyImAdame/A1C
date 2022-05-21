@@ -146,7 +146,7 @@ jobs:
 
   approve:
     name: Approve
-    needs: [build, test, checkstyleMain, checkstyleTest, bump]
+    needs: [build, bump]
     runs-on: ubuntu-latest
 
     steps:

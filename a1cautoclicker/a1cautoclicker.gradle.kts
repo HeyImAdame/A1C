@@ -25,9 +25,9 @@ import ProjectVersions.rlVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 //
-version = "1337.0.0"
+version = "1337.1.0"
 
-project.extra["PluginName"] = "AoneC AutoClicker"
+project.extra["PluginName"] = "A1C AutoClicker"
 project.extra["PluginDescription"] = "The better clicks"
 
 dependencies {

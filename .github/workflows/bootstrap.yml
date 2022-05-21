@@ -55,6 +55,4 @@ jobs:
           message: Automatic Bootstrap
           committer_name: GitHub Actions
           committer_email: actions@github.com
-          cwd: /home/runner/work/A1C-source/A1C-source/A1C
           add: "['./plugins.json', './release/*.jar']"
-          push: https://githib.com/HeyImAdame/A1C.git --set-upstream

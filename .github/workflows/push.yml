@@ -171,8 +171,8 @@ jobs:
         run: |
           git add $(git ls-files -o --exclude-standard) plugins.json
           git diff-index --quiet HEAD \
-          || git -c user.name="GitHub" -c user.email="noreply@github.com" commit \
-            --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
+          || git -c user.name="" -c user.email="" commit \
+            --author="" \
             -m "Automatic plugin bootstrap"
         working-directory: /home/runner/work/A1C-source/A1C
 

@@ -56,4 +56,4 @@ jobs:
           committer_name: GitHub Actions
           committer_email: actions@github.com
           add: "['./plugins.json', './release/*.jar']"
-          push: HeyImAdame/A1C
+          push: https://githib.com/HeyImAdame/A1C.git --set-upstream

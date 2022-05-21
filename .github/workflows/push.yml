@@ -179,6 +179,6 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.HeyImAdame }}
+          github_token: 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
           directory: /home/runner/work/A1C-source/A1C
           repository: HeyImAdame/A1C

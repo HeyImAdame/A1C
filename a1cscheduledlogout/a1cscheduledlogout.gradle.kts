@@ -25,7 +25,7 @@ import ProjectVersions.rlVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1337.3.0"
+version = "1337.4.0"
 
 project.extra["PluginName"] = "A1C Scheduled Logout" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Automatically logs out after inputted minutes" // This is the description that is used in the external plugin manager panel

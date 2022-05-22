@@ -14,7 +14,6 @@ classes/artifacts/client_jar/run.bat
 classes/artifacts/client_jar/client.jar
 !gradle-wrapper.jar
 .live/
-release/
 */out/
 .gradle/
 runelite-client/src/main/resources/runelite/*

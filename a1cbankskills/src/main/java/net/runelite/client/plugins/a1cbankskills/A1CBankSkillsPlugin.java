@@ -284,7 +284,7 @@ public class A1CBankSkillsPlugin extends Plugin
                 MenuAction.CC_OP,
                 getBankIndex(configID),
                 786445,
-                true);
+                false);
     }
 
     private MenuEntry useItemOnItem()
@@ -293,7 +293,11 @@ public class A1CBankSkillsPlugin extends Plugin
         Widget item2 = getInventoryItem(id2);
         if (item1 == null || item2 == null) return null;
         setSelectedInventoryItem(item1);
-        return createMenuEntry(0, MenuAction.WIDGET_TARGET_ON_WIDGET, item2.getIndex(), 9764864, true);
+        return createMenuEntry(0,
+                MenuAction.WIDGET_TARGET_ON_WIDGET,
+                item2.getIndex(),
+                9764864,
+                false);
     }
 
     private void setSelectedInventoryItem(Widget item)
@@ -311,7 +315,7 @@ public class A1CBankSkillsPlugin extends Plugin
                 MenuAction.CC_OP,
                 -1,
                 menuID,
-                true);
+                false);
     }
 
     private int getBankIndex(int id)
@@ -505,7 +509,7 @@ public class A1CBankSkillsPlugin extends Plugin
                 MenuAction.CC_OP_LOW_PRIORITY,
                 item1.getIndex(),
                 983043,
-                true);
+                false);
     }
     private void debug()
     {

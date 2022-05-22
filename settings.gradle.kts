@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "HeyImAdame Plugins"
+rootProject.name = "HeyImAdame"
 
 include(":a1cautoclicker")
 include(":a1cbankskills")

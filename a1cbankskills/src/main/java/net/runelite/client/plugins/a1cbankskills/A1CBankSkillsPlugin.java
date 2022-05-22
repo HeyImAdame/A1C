@@ -424,7 +424,7 @@ public class A1CBankSkillsPlugin extends Plugin
     {
         if (((getInventoryItem(id1) == null
                 && getInventoryItem(id2) == null)
-                && isInvEmpty())
+                && !isInvEmpty())
                 || getInventoryItem(idprod) != null
                 || ((getInventoryItem(id1) == null || getInventoryItem(id2) == null)
                 && isInvFull()))

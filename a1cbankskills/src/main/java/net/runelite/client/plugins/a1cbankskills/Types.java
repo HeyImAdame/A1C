@@ -3,6 +3,7 @@ package net.runelite.client.plugins.a1cbankskills;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.runelite.api.widgets.WidgetInfo;
 
 @Getter(AccessLevel.PUBLIC)
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class Types
         RANGE_POTION(169,109,245),
         MAGIC_POTION(3042,2483,3138),
         ENERGY_POTION(3018,103,2970),
-        STAMINA_4(12625,12640,3016),
+        STAMINA_4_dose(12625,12640,3016),
         MAPLE_LONGBOW_u(62,946,1517),
         YEW_LONGBOW_u(66,946,1515),
         MAGIC_LONGBOW_u(70,946,1513),
@@ -32,27 +33,31 @@ public class Types
         JUG_OF_WINE(1993,1937,1987),
         ;
 
-        public final int id;
+        public final int productid;
         public final int ingredientid1;
         public final int ingredientid2;
         Product(int id, int ingredientid1, int ingredientid2)
         {
-            this.id = id;
+            this.productid = id;
             this.ingredientid1 = ingredientid1;
             this.ingredientid2 = ingredientid2;
         }
     }
-public enum Banks
-{
-NPC,
-BOOTH,
-CHEST,
-}
+    public enum spellType
+    {
+        SPELL_HUMIDIFY;
+    }
+    public enum Banks
+    {
+    NPC,
+    BOOTH,
+    CHEST,
+    }
 
-public enum Skill
-{
-Use14on14,
-Use1on27,
-Humidify
-}
+    public enum Skill
+    {
+    Use14on14,
+    Use1on27,
+    CastSpell
+    }
 }

@@ -33,7 +33,6 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import org.pf4j.Extension;
-import static net.runelite.api.AnimationID.HERBLORE_POTIONMAKING;
 
 @Extension
 @PluginDescriptor(
@@ -58,6 +57,8 @@ public class A1CBankSkillsPlugin extends Plugin
 
     private int skillStage = 0;
     private int timeout;
+    private int isFirstDeposit = 1;
+    private int idprod;
     private int id1;
     private int id2;
     private int menuID = 0;
@@ -69,6 +70,8 @@ public class A1CBankSkillsPlugin extends Plugin
     {
         timeout = 0;
         skillStage = 0;
+        isFirstDeposit = 1;
+        idprod = 0;
         id1 = 0;
         id2 = 0;
         craftNum = 0;
@@ -78,6 +81,8 @@ public class A1CBankSkillsPlugin extends Plugin
     {
         timeout = 0;
         skillStage = 0;
+        isFirstDeposit = 1;
+        idprod = 0;
         id1 = 0;
         id2 = 0;
         craftNum = 0;
@@ -85,7 +90,7 @@ public class A1CBankSkillsPlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick event)
     {
-        if (id1 == 0 || id2 == 0 || craftNum == 0)
+        if (idprod == 0 || id1 == 0 || id2 == 0 || craftNum == 0)
         {
             updateConfig();
         }
@@ -102,7 +107,7 @@ public class A1CBankSkillsPlugin extends Plugin
         if (client.getLocalPlayer().getAnimation() != -1
             && client.getLocalPlayer().getAnimation() != 6294)
         {
-            timeout = 4;
+            timeout = 3;
         }
     }
     @Subscribe
@@ -138,10 +143,10 @@ public class A1CBankSkillsPlugin extends Plugin
                 use1on27Handler(event);
                 return;
             }
-            if (config.skill() == Types.Skill.Humidify)
+            if (config.skill() == Types.Skill.CastSpell)
             {
                 System.out.println("skillingstage = " + skillStage + " timeout = " + timeout + " useItemonItem = " + (useItemOnItem() != null) + " isBankOpen = " + isbankOpen() + " isInvEmpty = " + isInvEmpty() + " shouldconsume = " + shouldConsume());
-                humidifyHandler(event);
+                spellHandler(event);
                 return;
             }
         }
@@ -193,7 +198,13 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (!isInvEmpty() && skillStage != 4)
         {
-            event.setMenuEntry(depositItems());
+            if (isFirstDeposit == 1)
+            {
+                event.setMenuEntry(depositItems());
+                isFirstDeposit = 0;
+                return;
+            }
+            event.setMenuEntry(depositAllProducts());
             timeout = 1;
             skillStage = 3;
             return;
@@ -240,7 +251,13 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (!isInvEmpty() && skillStage != 4)
         {
-            event.setMenuEntry(depositItems());
+            if (isFirstDeposit == 1)
+            {
+                event.setMenuEntry(depositItems());
+                isFirstDeposit = 0;
+                return;
+            }
+            event.setMenuEntry(depositAllProducts());
             timeout = 1;
             skillStage = 3;
             return;
@@ -261,7 +278,7 @@ public class A1CBankSkillsPlugin extends Plugin
         }
     }
 
-    private void humidifyHandler(MenuOptionClicked event)
+    private void spellHandler(MenuOptionClicked event)
     {
         if (shouldConsume())
         {
@@ -271,7 +288,7 @@ public class A1CBankSkillsPlugin extends Plugin
 
         if (isInvFull())
         {
-            event.setMenuEntry(castHumidify());
+            event.setMenuEntry(castspell());
             timeout = 5;
             skillStage = 6;
             return;
@@ -285,7 +302,7 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (!isInvEmpty() && skillStage != 4)
         {
-            event.setMenuEntry(depositItems());
+            event.setMenuEntry(depositAllProducts());
             timeout = 1;
             skillStage = 3;
             return;
@@ -492,13 +509,12 @@ public class A1CBankSkillsPlugin extends Plugin
                 && inventoryWidget.stream().anyMatch(item -> item.getItemId() == id2))
                 && inventoryWidget.stream().noneMatch(item -> item.getItemId() == 6512));
     }
-    private MenuEntry castHumidify()
-    {
+    private MenuEntry castspell() {
         return createMenuEntry(
                 1,
                 MenuAction.CC_OP,
                 -1,
-                WidgetInfo.SPELL_HUMIDIFY.getId(),
+                config.spelltype().getId(),
                 false);
     }
     private boolean isbankOpen()
@@ -526,39 +542,24 @@ public class A1CBankSkillsPlugin extends Plugin
             return false;
         }
         return ((client.getLocalPlayer().getAnimation() != -1
-            && client.getLocalPlayer().getAnimation() != 6294)
-            || timeout > 0
-            || client.getLocalPlayer().getAnimation() == HERBLORE_POTIONMAKING
-            || outofMaterials());
+                && client.getLocalPlayer().getAnimation() != 6294)
+                || getGameObject(config.bankID()) == null
+                || timeout > 0
+                || outofMaterials());
     }
     private void updateConfig()
     {
-        if (config.skill() == Types.Skill.Use14on14)
+        if (config.product() == Types.Product.Custom)
         {
-            if (config.product() == Types.Product.Custom)
-            {
-                id2 = config.customproductID();
-                id1 = config.customingredientID1();
-                id2 = config.customingredientID2();
-            }
-            id2 = config.product().id;
-            id1 = config.product().ingredientid1;
-            id2 = config.product().ingredientid2;
-            craftNum = config.craftNum14on14();
+            idprod = config.customproductID();
+            id1 = config.customingredientID1();
+            id2 = config.customingredientID2();
         }
-        if (config.skill() == Types.Skill.Use1on27)
-        {
-            if (config.product() == Types.Product.Custom)
-            {
-                id2 = config.customproductID();
-                id1 = config.customingredientID1();
-                id2 = config.customingredientID2();
-            }
-            id2 = config.product().id;
-            id1 = config.product().ingredientid1;
-            id2 = config.product().ingredientid2;
-            craftNum = config.craftNum1on27();
-        }
+        isFirstDeposit = 1;
+        craftNum = config.craftNum();
+        id2 = config.product().productid;
+        id1 = config.product().ingredientid1;
+        id2 = config.product().ingredientid2;
     }
     private void sendGameMessage(String message)
     {
@@ -584,9 +585,9 @@ public class A1CBankSkillsPlugin extends Plugin
             client.invokeMenuAction("Logout", "", 1, MenuAction.CC_OP.getId(), -1, 11927560);
         }
     }
-    private MenuEntry depositAllofThisID(int id)
+    private MenuEntry depositAllProducts()
     {
-        Widget item1 = getInventoryItem(id);
+        Widget item1 = getInventoryItem(idprod);
         if (item1 == null)
         {
             return null;

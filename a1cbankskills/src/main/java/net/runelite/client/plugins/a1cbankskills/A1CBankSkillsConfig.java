@@ -1,8 +1,11 @@
 package net.runelite.client.plugins.a1cbankskills;
+import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigSection;
+
+import static net.runelite.api.widgets.WidgetInfo.SPELL_HUMIDIFY;
 
 @ConfigGroup("a1cbankskills")
 public interface A1CBankSkillsConfig extends Config
@@ -38,6 +41,20 @@ public interface A1CBankSkillsConfig extends Config
     {
         return true;
     }
+    @ConfigItem(
+            position = 29,
+            keyName = "spellType",
+            name = "Spell Type",
+            description = "Select spell",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Castspell",
+            section = craftsection
+    )
+    default WidgetInfo spelltype()
+    {
+        return SPELL_HUMIDIFY;
+    }
 
     @ConfigItem(
             position = 30,
@@ -56,7 +73,7 @@ public interface A1CBankSkillsConfig extends Config
             name = "Product (ID)",
             description = "ID of crafted item",
             hidden = true,
-            unhide = "skill",
+            unhide = "product",
             unhideValue = "Custom",
             section = craftsection
     )
@@ -71,7 +88,7 @@ public interface A1CBankSkillsConfig extends Config
             name = "Ingredient 1 ID",
             description = "ID of ingredient 1",
             hidden = true,
-            unhide = "skill",
+            unhide = "product",
             unhideValue = "Custom",
             section = craftsection
     )
@@ -86,7 +103,7 @@ public interface A1CBankSkillsConfig extends Config
             name = "Ingredient 2 ID",
             description = "ID of ingredient 2",
             hidden = true,
-            unhide = "skill",
+            unhide = "product",
             unhideValue = "Custom",
             section = craftsection
     )
@@ -94,34 +111,17 @@ public interface A1CBankSkillsConfig extends Config
     {
         return 103;
     }
-    @ConfigItem(
-            position = 50,
-            keyName = "craftmenunum14on14",
-            name = "Menu Craft Number",
-            description = "Enter craft item number",
-            hidden = true,
-            unhide = "skill",
-            unhideValue = "Use14on14",
-            section = craftsection
-    )
-    default int craftNum14on14()
-    {
-        return 1;
-    }
 
     @ConfigItem(
             position = 50,
-            keyName = "craftmenunum1on27",
+            keyName = "craftnum14on14",
             name = "Menu Craft Number",
             description = "Enter craft item number",
-            hidden = true,
-            unhide = "skill",
-            unhideValue = "Use1on27",
             section = craftsection
     )
-    default int craftNum1on27()
+    default int craftNum()
     {
-        return 8;
+        return 1;
     }
 
     @ConfigSection(

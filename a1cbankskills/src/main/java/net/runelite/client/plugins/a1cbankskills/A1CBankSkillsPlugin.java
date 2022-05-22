@@ -186,17 +186,17 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (shouldDeposit())
         {
-            if (isFirstDeposit == 1)
+            if (isFirstDeposit != 1 && getInventoryItem(idprod) != null)
             {
-                event.setMenuEntry(depositItems());
-                isFirstDeposit = 0;
-                skillStage = "depositall";
+                event.setMenuEntry(depositAllProducts());
+                timeout = 1;
+                skillStage = "depositprods";
                 return;
             }
-        event.setMenuEntry(depositAllProducts());
-        timeout = 1;
-        skillStage = "depositprods";
-        return;
+            event.setMenuEntry(depositItems());
+            isFirstDeposit = 0;
+            skillStage = "depositall";
+            return;
         }
         if (getInventoryItem(id1) == null) {
             event.setMenuEntry(withdrawItem(id1, config.skill()));

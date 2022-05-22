@@ -84,6 +84,7 @@ public class A1CAutoClick extends Plugin
 	@Override
 	protected void shutDown()
 	{
+		run = false;
 		overlayManager.remove(overlay);
 		keyManager.unregisterKeyListener(hotkeyListener);
 		executorService.shutdown();

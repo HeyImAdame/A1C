@@ -87,6 +87,7 @@ public class A1CScheduledLogoutPlugin extends Plugin {
         else
         {
             clientThread.invoke(this::logout);
+            CountdownTimer = config.minutesToLogout()*100;
         }
     }
 

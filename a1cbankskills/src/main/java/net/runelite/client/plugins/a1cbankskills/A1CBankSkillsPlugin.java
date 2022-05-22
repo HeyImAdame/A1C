@@ -55,9 +55,9 @@ public class A1CBankSkillsPlugin extends Plugin
         return configManager.getConfig(A1CBankSkillsConfig.class);
     }
 
-    private int skillStage = 0;
+    private String skillStage;
     private int timeout;
-    private int isFirstDeposit = 1;
+    private int isFirstDeposit;
     private int idprod;
     private int id1;
     private int id2;
@@ -69,7 +69,7 @@ public class A1CBankSkillsPlugin extends Plugin
     protected void startUp()
     {
         timeout = 0;
-        skillStage = 0;
+        skillStage = null;
         isFirstDeposit = 1;
         idprod = 0;
         id1 = 0;
@@ -80,7 +80,7 @@ public class A1CBankSkillsPlugin extends Plugin
     protected void shutDown()
     {
         timeout = 0;
-        skillStage = 0;
+        skillStage = null;
         isFirstDeposit = 1;
         idprod = 0;
         id1 = 0;
@@ -118,10 +118,12 @@ public class A1CBankSkillsPlugin extends Plugin
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event) throws InterruptedException
     {
+
         if (event.getMenuOption().equals("<col=00ff00>One Click Adam Bank Skillz"))
         {
-            if (timeout > 50)
+            if (timeout > 50 || shouldConsume())
             {
+                debug();
                 event.consume();
                 return;
             }
@@ -131,24 +133,9 @@ public class A1CBankSkillsPlugin extends Plugin
                 timeout = 75;
                 return;
             }
-            if (config.skill() == Types.Skill.Use14on14)
-            {
-                System.out.println("skillingstage = " + skillStage + " timeout = " + timeout + " useItemonItem = " + (useItemOnItem() != null) + " isBankOpen = " + isbankOpen() + " isInvEmpty = " + isInvEmpty() + " shouldconsume = " + shouldConsume());
-                use14on14Handler(event);
-                return;
-            }
-            if (config.skill() == Types.Skill.Use1on27)
-            {
-                System.out.println("skillingstage = " + skillStage + " timeout = " + timeout + " useItemonItem = " + (useItemOnItem() != null) + " isBankOpen = " + isbankOpen() + " isInvEmpty = " + isInvEmpty() + " shouldconsume = " + shouldConsume());
-                use1on27Handler(event);
-                return;
-            }
-            if (config.skill() == Types.Skill.CastSpell)
-            {
-                System.out.println("skillingstage = " + skillStage + " timeout = " + timeout + " useItemonItem = " + (useItemOnItem() != null) + " isBankOpen = " + isbankOpen() + " isInvEmpty = " + isInvEmpty() + " shouldconsume = " + shouldConsume());
-                spellHandler(event);
-                return;
-            }
+            clickHandler(event);
+            debug();
+            return;
         }
     }
 
@@ -167,158 +154,61 @@ public class A1CBankSkillsPlugin extends Plugin
         client.setTempMenuEntry(Arrays.stream(client.getMenuEntries()).filter(x -> x.getOption().equals(text)).findFirst().orElse(null));
     }
 
-    private void use14on14Handler(MenuOptionClicked event)
+    private void clickHandler(MenuOptionClicked event)
     {
-        if (shouldConsume())
-        {
-            event.consume();
-            return;
-        }
-
-        if (skillStage == 6 && isCraftingMenuOpen())
+        if (skillStage == "useitemonitem" && isCraftingMenuOpen() && config.skill() != Types.Skill.CastSpell)
         {
             event.setMenuEntry(selectCraftOption());
             timeout = 1;
-            skillStage = 1;
+            skillStage = "pushcraftopt";
             return;
         }
-        if (useItemOnItem() != null)
+        if (useItemOnItem() != null && config.skill() != Types.Skill.CastSpell)
         {
             event.setMenuEntry(useItemOnItem());
             timeout = 1;
-            skillStage = 6;
+            skillStage = "useitemonitem";
             return;
         }
-        if (!isbankOpen())
-        {
-            event.setMenuEntry(openBank());
-            timeout = 1;
-            skillStage = 1;
-            return;
-        }
-        if (!isInvEmpty() && skillStage != 4)
-        {
-            if (isFirstDeposit == 1)
-            {
-                event.setMenuEntry(depositItems());
-                isFirstDeposit = 0;
-                return;
-            }
-            event.setMenuEntry(depositAllProducts());
-            timeout = 1;
-            skillStage = 3;
-            return;
-        }
-        if (skillStage == 4 && getInventoryItem(id2) == null)
-        {
-            event.setMenuEntry(withdrawItem(id2, 14));
-            timeout = 1;
-            skillStage = 5;
-            return;
-        }
-        event.setMenuEntry(withdrawItem(id1, 14));
-        timeout = 1;
-        skillStage = 4;
-        return;
-    }
-    private void use1on27Handler(MenuOptionClicked event)
-    {
-        if (shouldConsume())
-        {
-            event.consume();
-            return;
-        }
-
-        if (skillStage == 6 && isCraftingMenuOpen())
-        {
-            event.setMenuEntry(selectCraftOption());
-            skillStage = 1;
-            return;
-        }
-        if (useItemOnItem() != null)
-        {
-            event.setMenuEntry(useItemOnItem());
-            timeout = 1;
-            skillStage = 6;
-            return;
-        }
-        if (!isbankOpen())
-        {
-            event.setMenuEntry(openBank());
-            timeout = 1;
-            skillStage = 1;
-            return;
-        }
-        if (!isInvEmpty() && skillStage != 4)
-        {
-            if (isFirstDeposit == 1)
-            {
-                event.setMenuEntry(depositItems());
-                isFirstDeposit = 0;
-                return;
-            }
-            event.setMenuEntry(depositAllProducts());
-            timeout = 1;
-            skillStage = 3;
-            return;
-        }
-        if (skillStage == 4 && getInventoryItem(id2) == null)
-        {
-            event.setMenuEntry(withdrawItem(id2, 27));
-            timeout = 1;
-            skillStage = 5;
-            return;
-        }
-        if (getInventoryItem(id1) == null)
-        {
-            event.setMenuEntry(withdrawItem(id1, 1));
-            timeout = 1;
-            skillStage = 4;
-            return;
-        }
-    }
-
-    private void spellHandler(MenuOptionClicked event)
-    {
-        if (shouldConsume())
-        {
-            event.consume();
-            return;
-        }
-
-        if (isInvFull())
+        if (isInvFull() && config.skill() == Types.Skill.CastSpell)
         {
             event.setMenuEntry(castspell());
             timeout = 5;
-            skillStage = 6;
+            skillStage = "castspell";
             return;
         }
         if (!isbankOpen())
         {
             event.setMenuEntry(openBank());
             timeout = 1;
-            skillStage = 1;
+            skillStage = "openbank";
             return;
         }
-        if (!isInvEmpty() && skillStage != 4)
+        if (shouldDeposit())
         {
-            event.setMenuEntry(depositAllProducts());
+            if (isFirstDeposit == 1)
+            {
+                event.setMenuEntry(depositItems());
+                isFirstDeposit = 0;
+                skillStage = "depositall";
+                return;
+            }
+        event.setMenuEntry(depositAllProducts());
+        timeout = 1;
+        skillStage = "depositprods";
+        return;
+        }
+        if (getInventoryItem(id1) == null) {
+            event.setMenuEntry(withdrawItem(id1, config.skill()));
             timeout = 1;
-            skillStage = 3;
+            skillStage = "withdrawid1";
             return;
         }
-        if (skillStage == 4 && getInventoryItem(id2) == null)
+        if (getInventoryItem(id2) == null)
         {
-            event.setMenuEntry(withdrawItem(id2, 27));
+            event.setMenuEntry(withdrawItem(id2, config.skill()));
             timeout = 1;
-            skillStage = 5;
-            return;
-        }
-        if (getInventoryItem(id1) == null)
-        {
-            event.setMenuEntry(withdrawItem(id1, 27));
-            timeout = 1;
-            skillStage = 4;
+            skillStage = "withdrawid2";
             return;
         }
     }
@@ -369,20 +259,25 @@ public class A1CBankSkillsPlugin extends Plugin
                 false);
     }
 
-    private MenuEntry withdrawItem(Integer configID, Integer amt)
+    private MenuEntry withdrawItem(Integer configID, Enum type)
     {
         if (getBankIndex(configID) == -1) return null;
-        if (amt == 1)
+        if (type == Types.Skill.Use1on27 || type == Types.Skill.CastSpell)
         {
-            amtID = 2;
+            if (configID == id1)
+            {
+                amtID = 2;  //withdraw 1
+            } else {
+                amtID = 7; //withdraw all
+            }
         }
-        if (amt == 14)
+        if (type == Types.Skill.Use14on14)
         {
-            amtID = 5;
+            amtID = 5; //withdraw 14
         }
-        if (amt == 27)
+        if (amtID == 0)
         {
-            amtID = 7;
+            return null;
         }
         return createMenuEntry(
                 amtID,
@@ -505,9 +400,7 @@ public class A1CBankSkillsPlugin extends Plugin
     private boolean isInvFull()
     {
         List<Widget> inventoryWidget = Arrays.asList(client.getWidget(WidgetInfo.INVENTORY.getId()).getDynamicChildren());
-        return ((inventoryWidget.stream().anyMatch(item -> item.getItemId() == id1)
-                && inventoryWidget.stream().anyMatch(item -> item.getItemId() == id2))
-                && inventoryWidget.stream().noneMatch(item -> item.getItemId() == 6512));
+        return (inventoryWidget.stream().noneMatch(item -> item.getItemId() == 6512));
     }
     private MenuEntry castspell() {
         return createMenuEntry(
@@ -527,7 +420,19 @@ public class A1CBankSkillsPlugin extends Plugin
         menuID = 17694734 + craftNum - 1;
         return client.getWidget(WidgetInfo.MULTI_SKILL_MENU) != null;
     }
-
+    private boolean shouldDeposit()
+    {
+        if (((getInventoryItem(id1) == null
+                && getInventoryItem(id2) == null)
+                && isInvEmpty())
+                || getInventoryItem(idprod) != null
+                || ((getInventoryItem(id1) == null || getInventoryItem(id2) == null)
+                && isInvFull()))
+        {
+            return true;
+        }
+        return false;
+    }
     private boolean outofMaterials()
     {
         return ((getBankIndex(id1) == -1
@@ -551,13 +456,16 @@ public class A1CBankSkillsPlugin extends Plugin
     {
         if (config.product() == Types.Product.Custom)
         {
+            isFirstDeposit = 1;
+            craftNum = config.craftNum();
             idprod = config.customproductID();
             id1 = config.customingredientID1();
             id2 = config.customingredientID2();
+            return;
         }
         isFirstDeposit = 1;
-        craftNum = config.craftNum();
-        id2 = config.product().productid;
+        craftNum = config.product().craftOpt;
+        idprod = config.product().productid;
         id1 = config.product().ingredientid1;
         id2 = config.product().ingredientid2;
     }
@@ -598,5 +506,12 @@ public class A1CBankSkillsPlugin extends Plugin
                 item1.getIndex(),
                 983043,
                 true);
+    }
+    private void debug()
+    {
+        System.out.println("skillstage=" + skillStage + " timeout=" + timeout
+                + " useItemonItem=" + (useItemOnItem() != null) + " isBankOpen="
+                + isbankOpen() + " isInvEmpty=" + isInvEmpty() + " shouldconsume="
+                + shouldConsume());
     }
 }

@@ -117,6 +117,9 @@ public interface A1CBankSkillsConfig extends Config
             keyName = "craftnum14on14",
             name = "Menu Craft Number",
             description = "Enter craft item number",
+            hidden = true,
+            unhide = "product",
+            unhideValue = "Custom",
             section = craftsection
     )
     default int craftNum()

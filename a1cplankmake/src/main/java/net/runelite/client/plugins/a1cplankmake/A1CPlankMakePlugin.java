@@ -174,7 +174,7 @@ public class A1CPlankMakePlugin extends Plugin
             if (getEmptySlots() == 0 && (getItemSlots(logID) > 0))
             {
                 event.setMenuEntry(teleportToHouseMES());
-                timeout = 6;
+                timeout = 7;
                 action = "House tele";
                 return;
             }

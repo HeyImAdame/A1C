@@ -22,4 +22,4 @@ runelite-client/dependencies.txt
 hs_err*
 replay_pid*
 plugins.json
-release
+**/release/*.jar

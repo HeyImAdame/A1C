@@ -4,16 +4,7 @@ import java.util.List;
 import javax.inject.Inject;
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.MenuAction;
-import net.runelite.api.MenuEntry;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.GameObject;
-import net.runelite.api.NPC;
-import net.runelite.api.Point;
-import net.runelite.api.TileObject;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.InventoryID;
+import net.runelite.api.*;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.MenuOptionClicked;
@@ -61,9 +52,14 @@ public class A1CBankSkillsPlugin extends Plugin
     private int idprod;
     private int id1;
     private int id2;
+    private int id3;
     private int menuID = 0;
     private int amtID;
     private int craftNum;
+    private long withdrawextra;
+    private long withdrawextratmp;
+    private int stuckCounter = 0;
+    private String lastaction;
 
     @Override
     protected void startUp()
@@ -75,6 +71,7 @@ public class A1CBankSkillsPlugin extends Plugin
         id1 = 0;
         id2 = 0;
         craftNum = 0;
+        stuckCounter = 0;
     }
     @Override
     protected void shutDown()
@@ -107,7 +104,7 @@ public class A1CBankSkillsPlugin extends Plugin
         if (client.getLocalPlayer().getAnimation() != -1
             && client.getLocalPlayer().getAnimation() != 6294)
         {
-            timeout = 3;
+            timeout = 4;
         }
     }
     @Subscribe
@@ -121,21 +118,39 @@ public class A1CBankSkillsPlugin extends Plugin
 
         if (event.getMenuOption().equals("<col=00ff00>One Click Adam Bank Skillz"))
         {
+            if (isbankOpen()) {
+                if (client.getVarbitValue(6590) != 0) {
+                    event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, -1, 786460, false));
+                    skillStage = "setwithdrawOpt";
+                    return;
+                }
+                if (client.getVarbitValue(Varbits.CURRENT_BANK_TAB) != 0) {
+                    event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, 10, WidgetInfo.BANK_TAB_CONTAINER.getId(), false));
+                    skillStage = "setbanktab";
+                    return;
+                }
+            }
             if (timeout > 50 || shouldConsume())
             {
-                debug();
+                System.out.println("Consumed. Timeout = " + timeout);
                 event.consume();
                 return;
             }
-            if (outofMaterials())
+            if (outofMaterials() || stuckCounter > 10)
             {
                 sendGameMessage("No more materials found. Logging out in 15 seconds.");
                 timeout = 75;
                 return;
             }
+            lastaction = skillStage;
             clickHandler(event);
             debug();
-            return;
+            if (checkifStuck())
+            {
+                stuckCounter = stuckCounter +1;
+                return;
+            }
+            stuckCounter = 0;
         }
     }
 
@@ -170,7 +185,10 @@ public class A1CBankSkillsPlugin extends Plugin
             skillStage = "useitemonitem";
             return;
         }
-        if (isInvFull() && config.skill() == Types.Skill.CastSpell)
+        if (config.skill() == Types.Skill.CastSpell
+            && getInventoryItem(id1) != null
+            && getInventoryItem(id2) != null
+            && getInventoryItem(id3) != null)
         {
             event.setMenuEntry(castspell());
             timeout = 5;
@@ -186,6 +204,7 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (shouldDeposit())
         {
+            withdrawextratmp = withdrawextra;
             if (isFirstDeposit != 1 && getInventoryItem(idprod) != null)
             {
                 event.setMenuEntry(depositAllProducts());
@@ -198,8 +217,12 @@ public class A1CBankSkillsPlugin extends Plugin
             skillStage = "depositall";
             return;
         }
-        if (getInventoryItem(id1) == null) {
+        if (getInventoryItem(id1) == null || (3 - countInvIDs(id1) <= 0)) {
             event.setMenuEntry(withdrawItem(id1, config.skill()));
+            if (3 - countInvIDs(id1) <= 0)
+            {
+                withdrawextratmp = 3 - countInvIDs(id1);
+            }
             timeout = 1;
             skillStage = "withdrawid1";
             return;
@@ -211,6 +234,14 @@ public class A1CBankSkillsPlugin extends Plugin
             skillStage = "withdrawid2";
             return;
         }
+        if (getInventoryItem(id3) == null)
+        {
+            event.setMenuEntry(withdrawItem(id3, config.skill()));
+            timeout = 1;
+            skillStage = "withdrawid2";
+            return;
+        }
+        skillStage = "idle";
     }
     private MenuEntry openBank()
     {
@@ -262,16 +293,20 @@ public class A1CBankSkillsPlugin extends Plugin
     private MenuEntry withdrawItem(Integer configID, Enum type)
     {
         if (getBankIndex(configID) == -1) return null;
-        if (type == Types.Skill.Use1on27 || type == Types.Skill.CastSpell)
+        if (type == Types.Skill.Use1on27
+                || (type == Types.Skill.CastSpell
+                && configID == id1))
         {
             if (configID == id1)
             {
-                amtID = 2;  //withdraw 1
+                amtID = 1;  //withdraw 1
             } else {
                 amtID = 7; //withdraw all
             }
         }
-        if (type == Types.Skill.Use14on14)
+        if (type == Types.Skill.Use14on14
+                || (type == Types.Skill.CastSpell
+                && configID == id2))
         {
             amtID = 5; //withdraw 14
         }
@@ -411,7 +446,7 @@ public class A1CBankSkillsPlugin extends Plugin
                 1,
                 MenuAction.CC_OP,
                 -1,
-                config.spelltype().getId(),
+                config.product().spellname.getId(),
                 false);
     }
     private boolean isbankOpen()
@@ -427,10 +462,13 @@ public class A1CBankSkillsPlugin extends Plugin
     private boolean shouldDeposit()
     {
         if (((getInventoryItem(id1) == null
-                && getInventoryItem(id2) == null)
+                && getInventoryItem(id2) == null
+                && getInventoryItem(id3) == null)
                 && !isInvEmpty())
                 || getInventoryItem(idprod) != null
-                || ((getInventoryItem(id1) == null || getInventoryItem(id2) == null)
+                || ((getInventoryItem(id1) == null
+                || getInventoryItem(id2) == null
+                || getInventoryItem(id3) == null)
                 && isInvFull()))
         {
             return true;
@@ -439,10 +477,11 @@ public class A1CBankSkillsPlugin extends Plugin
     }
     private boolean outofMaterials()
     {
-        return ((getBankIndex(id1) == -1
-                || getBankIndex(id2) == -1)
-                && isbankOpen()
-                && isInvEmpty());
+        return (((getBankIndex(id1) == -1
+                && getInventoryItem(id1) == null)
+                || (getBankIndex(id2) == -1
+                && getInventoryItem(id2) == null))
+                && isbankOpen());
     }
     private boolean shouldConsume()
     {
@@ -472,6 +511,13 @@ public class A1CBankSkillsPlugin extends Plugin
         idprod = config.product().productid;
         id1 = config.product().ingredientid1;
         id2 = config.product().ingredientid2;
+        if (config.product() == Types.Product.SUPERGLASSMAKE)
+        {
+            id3 = 12791;
+            withdrawextra = 3;
+            return;
+        }
+        withdrawextra = 0;
     }
     private void sendGameMessage(String message)
     {
@@ -514,8 +560,14 @@ public class A1CBankSkillsPlugin extends Plugin
     private void debug()
     {
         System.out.println("skillstage=" + skillStage + " timeout=" + timeout
-                + " useItemonItem=" + (useItemOnItem() != null) + " isBankOpen="
-                + isbankOpen() + " isInvEmpty=" + isInvEmpty() + " shouldconsume="
-                + shouldConsume());
+                + " stuckCounter " + stuckCounter + " withdrawextratmp " + withdrawextratmp
+                + " shouldconsume=" + shouldConsume());
+    }
+    private long countInvIDs(Integer id) {
+        List<Widget> inventoryWidget = Arrays.asList(client.getWidget(WidgetInfo.INVENTORY.getId()).getDynamicChildren());
+        return (inventoryWidget.stream().filter(item -> item.getItemId() == id).count());
+    }
+    private boolean checkifStuck(){
+        return (lastaction == skillStage);
     }
 }

@@ -8,7 +8,7 @@ plugins {
     checkstyle
 }
 
-project.extra["GithubUrl"] = "https://github.com/HeyImAdame/A1C-source"
+project.extra["GithubUrl"] = "https://github.com/HeyImAdame/A1C"
 
 apply<BootstrapPlugin>()
 apply<VersionPlugin>()

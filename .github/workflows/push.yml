@@ -37,35 +37,35 @@ jobs:
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Building client
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Upload client artifacts to local maven
         run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Assembling plugins
         run: ./gradlew --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Building plugins
         run: ./gradlew -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Upload plugins artifacts to local maven
         run: ./gradlew --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
@@ -122,35 +122,35 @@ jobs:
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Building client
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Upload client artifacts to local maven
         run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Assembling plugins
         run: ./gradlew --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Building plugins
         run: ./gradlew --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Upload plugins artifacts to local maven
         run: ./gradlew --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
@@ -165,7 +165,7 @@ jobs:
         run: ./gradlew bootstrapPlugins --stacktrace --console=plain
 
       - name: Copy bootstrap
-        run: cp -af /home/runner/work/A1C-source/A1C-source/build/bootstrap/. /home/runner/work/A1C-source/A1C/
+        run: cp -af /home/runner/work/A1C/A1C/build/bootstrap/. /home/runner/work/A1C/A1C/
 
       - name: Commit bootstrap
         run: |
@@ -174,13 +174,13 @@ jobs:
           || git -c user.name="HeyImAdame" -c user.email="105798352+HeyImAdame@users.noreply.github.com" commit \
             --author="HeyImAdame <105798352+HeyImAdame@users.noreply.github.com>" \
             -m "Automatic plugin bootstrap"
-        working-directory: /home/runner/work/A1C-source/A1C
+        working-directory: /home/runner/work/A1C/A1C
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.HeyImAdame }}
-          directory: /home/runner/work/A1C-source/A1C
+          directory: /home/runner/work/A1C/A1C
           repository: HeyImAdame/A1C
           branch: master
           force: true

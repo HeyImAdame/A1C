@@ -44,35 +44,35 @@ jobs:
 
       - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Assembling client
         run: ./gradlew assemble --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Building client
         run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Upload client artifacts to local maven
         run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal :runescape-api:publishToMavenLocal :injection-annotations:publishToMavenLocal --console=plain
-        working-directory: /home/runner/work/A1C-source/runelite
+        working-directory: /home/runner/work/A1C/runelite
 
       - name: Make gradlew executable (plugins)
         run: chmod +x ./gradlew
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Assembling plugins
         run: ./gradlew --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Building plugins
         run: ./gradlew --stacktrace -x test -x checkstyleMain --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Upload plugins artifacts to local maven
         run: ./gradlew --console=plain
-        working-directory: /home/runner/work/A1C-source/plugins
+        working-directory: /home/runner/work/A1C/plugins
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew

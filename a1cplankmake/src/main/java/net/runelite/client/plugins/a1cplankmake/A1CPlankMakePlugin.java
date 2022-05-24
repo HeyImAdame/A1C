@@ -2,17 +2,7 @@ package net.runelite.client.plugins.a1cplankmake;
 
 import javax.inject.Inject;
 import com.google.inject.Provides;
-import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuAction;
-import net.runelite.api.Point;
-import net.runelite.api.TileObject;
-import net.runelite.api.GameObject;
-import net.runelite.api.GameState;
-import net.runelite.api.Client;
-import net.runelite.api.ItemID;
-import net.runelite.api.InventoryID;
-import net.runelite.api.NPC;
-import net.runelite.api.ChatMessageType;
+import net.runelite.api.*;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.MenuOptionClicked;
@@ -65,6 +55,8 @@ public class A1CPlankMakePlugin extends Plugin
     private int plankID = 0;
     private int bankID = 0;
     private int forcelogout = 0;
+    private int stuckCounter = 0;
+    private String lastaction;
 
     @Override
     protected void startUp() throws Exception
@@ -75,6 +67,7 @@ public class A1CPlankMakePlugin extends Plugin
         plankID = 0;
         bankID = 0;
         forcelogout = 0;
+        stuckCounter = 0;
     }
 
     @Subscribe
@@ -132,21 +125,24 @@ public class A1CPlankMakePlugin extends Plugin
             event.consume();
             return;
         }
-        if (outofMaterials() || forcelogout == 1)
+        if (outofMaterials() || forcelogout == 1 || stuckCounter > 10)
         {
             sendGameMessage("No more materials found. Logging out in 15 seconds.");
-            if (timeout > 40)
-            {
-                return;
-            }
             timeout = 75;
             return;
         }
         if (event.getMenuOption().equals("<col=00ff00>One Click Adam Plank Make"))
         {
-            System.out.println("action = " + action + " timeout = " + timeout + " isBankOpen = " + isbankOpen() + " shouldconsume = " + shouldConsume());
+            lastaction = action;
+            System.out.println("action = " + action + " timeout = " + timeout + " shouldconsume = " + shouldConsume());
             handleClick(event);
-            }
+        }
+        if (checkifStuck())
+        {
+            stuckCounter = stuckCounter + 1;
+            return;
+        }
+        stuckCounter = 0;
     }
 
     private void handleClick(MenuOptionClicked event)
@@ -183,6 +179,18 @@ public class A1CPlankMakePlugin extends Plugin
                 event.setMenuEntry(openBank());
                 timeout = 5;
                 action = "Open bank";
+                return;
+            }
+            if (client.getVarbitValue(6590) != 0)
+            {
+                event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, -1, 786460, false));
+                action = "setwithdrawOpt";
+                return;
+            }
+            if (client.getVarbitValue(Varbits.CURRENT_BANK_TAB) != 0)
+            {
+                event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, 10, WidgetInfo.BANK_TAB_CONTAINER.getId(), false));
+                action = "setbanktab";
                 return;
             }
             if (getItemSlots(plankID) > 0)
@@ -247,10 +255,8 @@ public class A1CPlankMakePlugin extends Plugin
                 action = "callButler";
                 return;
             }
-            if (getItemSlots(logID) > 10)
-            {
-                if (client.getWidget(116, 8) != null)
-                {
+            if (getItemSlots(logID) > 10) {
+                if (client.getWidget(116, 8) != null) {
                     event.setMenuEntry(houseOptionsMES());
                     timeout = 1;
                     action = "houseOpts";
@@ -620,5 +626,8 @@ public class A1CPlankMakePlugin extends Plugin
             return true;
         }
         return false;
+    }
+    private boolean checkifStuck() {
+        return (lastaction == action);
     }
 }

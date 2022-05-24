@@ -41,20 +41,6 @@ public interface A1CBankSkillsConfig extends Config
     {
         return true;
     }
-    @ConfigItem(
-            position = 29,
-            keyName = "spellType",
-            name = "Spell Type",
-            description = "Select spell",
-            hidden = true,
-            unhide = "skill",
-            unhideValue = "Castspell",
-            section = craftsection
-    )
-    default WidgetInfo spelltype()
-    {
-        return SPELL_HUMIDIFY;
-    }
 
     @ConfigItem(
             position = 30,

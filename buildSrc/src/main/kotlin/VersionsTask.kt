@@ -42,8 +42,8 @@ open class VersionsTask : DefaultTask() {
                 val version = SemVer.parse(it.replace("\"", "").replace("version = ", ""))
 
                 if (major) {
-                    version.major += 1
-                    version.minor = 0
+                    version.major += 0
+                    version.minor = 1
                     version.patch = 0
                 } else if (minor) {
                     version.minor += 1

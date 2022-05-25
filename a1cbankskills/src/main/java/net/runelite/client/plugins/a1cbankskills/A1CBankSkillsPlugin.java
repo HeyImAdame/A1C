@@ -116,7 +116,8 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (client.getLocalPlayer().getAnimation() != -1
                 && !(client.getLocalPlayer().getAnimation() == 6294
-                || client.getLocalPlayer().getAnimation() == 4413))
+                || client.getLocalPlayer().getAnimation() == 4413
+                || client.getLocalPlayer().getAnimation() == 363))
         {
             timeout = 4;
         }
@@ -547,7 +548,8 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         return ((client.getLocalPlayer().getAnimation() != -1
                 && !(client.getLocalPlayer().getAnimation() == 6294
-                || client.getLocalPlayer().getAnimation() == 4413))
+                || client.getLocalPlayer().getAnimation() == 4413
+                || client.getLocalPlayer().getAnimation() == 363))
                 || getGameObject(BANKid) == null
                 || timeout > 0
                 || outofMaterials());
@@ -600,7 +602,7 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         skillOpt = config.skill();
         id3 = -1;
-        withdrawextratmp = withdrawextra - countInvIDs(id1);
+        withdrawextratmp = 0;
     }
     private void sendGameMessage(String message)
     {

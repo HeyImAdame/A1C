@@ -100,7 +100,10 @@ public class A1CPlankMakePlugin extends Plugin
     {
         if (client.getLocalPlayer() == null
                 || client.getGameState() != GameState.LOGGED_IN
-                || client.getWidget(378, 78) != null) return;
+                || client.getWidget(378, 78) != null)
+        {
+            return;
+        }
         if (!(isInPOH() || isAtBank())) return;
         String text;
         {
@@ -120,7 +123,8 @@ public class A1CPlankMakePlugin extends Plugin
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event)
     {
-        if (timeout > 50)
+        if (timeout > 50
+                || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null)
         {
             event.consume();
             return;

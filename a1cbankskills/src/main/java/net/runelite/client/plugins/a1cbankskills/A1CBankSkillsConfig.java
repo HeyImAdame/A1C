@@ -25,10 +25,7 @@ public interface A1CBankSkillsConfig extends Config
             description = "Choose",
             section = craftsection
     )
-    default Types.Skill skill()
-    {
-        return Types.Skill.Use14on14;
-    }
+    default Types.Skill skill() { return Types.Skill.Use14on14; }
 
     @ConfigItem(
             position = 20,
@@ -41,25 +38,59 @@ public interface A1CBankSkillsConfig extends Config
     {
         return true;
     }
-
     @ConfigItem(
-            position = 30,
-            keyName = "product",
+            position = 28,
+            keyName = "14on14product",
             name = "Craft",
             description = "The item to craft",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Use14on14",
             section = craftsection
     )
- default Types.Product product()    {
-        return Types.Product.SUPER_ATTACK;
+    default Types.Productuse14on14 product14on14() { return Types.Productuse14on14.SUPER_ATTACK; }
+    @ConfigItem(
+            position = 29,
+            keyName = "1on27product",
+            name = "Craft",
+            description = "The item to craft",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Use1on27",
+            section = craftsection
+    )
+    default Types.Productuse1on27 product1on27()    {
+        return Types.Productuse1on27.EMPTY_LIGHT_ORB;
     }
-
+    @ConfigItem(
+            position = 30,
+            keyName = "productcastspell",
+            name = "Craft",
+            description = "The item to craft",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "CastSpell",
+            section = craftsection
+    )
+ default Types.Productcastspell productcastspell()    {return Types.Productcastspell.SUPERGLASSMAKE;}
+    @ConfigItem(
+            position = 10,
+            keyName = "customskill",
+            name = "Custom option",
+            description = "Choose",
+            hidden = true,
+            unhide = "skill",
+            unhideValue = "Custom",
+            section = craftsection
+    )
+    default Types.Skill customskill() { return Types.Skill.Use14on14; }
     @ConfigItem(
             position = 31,
             keyName = "productID",
             name = "Product (ID)",
             description = "ID of crafted item",
             hidden = true,
-            unhide = "product",
+            unhide = "skill",
             unhideValue = "Custom",
             section = craftsection
     )
@@ -74,7 +105,7 @@ public interface A1CBankSkillsConfig extends Config
             name = "Ingredient 1 ID",
             description = "ID of ingredient 1",
             hidden = true,
-            unhide = "product",
+            unhide = "skill",
             unhideValue = "Custom",
             section = craftsection
     )
@@ -89,7 +120,7 @@ public interface A1CBankSkillsConfig extends Config
             name = "Ingredient 2 ID",
             description = "ID of ingredient 2",
             hidden = true,
-            unhide = "product",
+            unhide = "skill",
             unhideValue = "Custom",
             section = craftsection
     )
@@ -100,11 +131,11 @@ public interface A1CBankSkillsConfig extends Config
 
     @ConfigItem(
             position = 50,
-            keyName = "craftnum14on14",
+            keyName = "craftnum",
             name = "Menu Craft Number",
             description = "Enter craft item number",
             hidden = true,
-            unhide = "product",
+            unhide = "skill",
             unhideValue = "Custom",
             section = craftsection
     )
@@ -128,12 +159,41 @@ public interface A1CBankSkillsConfig extends Config
             description = "Choose",
             section = banksettings
     )
-    default Types.Banks bankType()
+    default Types.Banks bank()
     {
-        return Types.Banks.CHEST;
+        return Types.Banks.CWars;
     }
 
     @ConfigItem(
+            position = 61,
+            keyName = "bankID",
+            name = "Bank ID",
+            description = "Choose",
+            hidden = true,
+            unhide = "bank",
+            unhideValue = "Custom",
+            section = banksettings
+    )
+    default int bankid()
+    {
+        return 4483;
+    }
+
+    @ConfigItem(
+            position = 62,
+            keyName = "bankType",
+            name = "Bank Type",
+            description = "Choose",
+            hidden = true,
+            unhide = "bank",
+            unhideValue = "Custom",
+            section = banksettings
+    )
+    default Types.BankType banktype()
+    {
+        return Types.BankType.CHEST;
+    }
+/*    @ConfigItem(
             position = 70,
             keyName = "bankID",
             name = "Bank ID",
@@ -143,5 +203,5 @@ public interface A1CBankSkillsConfig extends Config
     default int bankID()
     {
         return 30796;
-    }
+    }*/
 }

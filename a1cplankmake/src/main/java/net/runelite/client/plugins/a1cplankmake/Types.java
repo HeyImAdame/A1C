@@ -11,10 +11,11 @@ public class Types
 
     public enum Bank
     {
-        Seers(25808, "Booth"),
-        CWars(4483, "Chest"),
-        Crafting_Guild(14886, "Chest"),
-        Camelot_pvp(10777, "Chest");
+
+        CWars(4483, "Chest");
+//        Seers(25808, "Booth"),
+//        Crafting_Guild(14886, "Chest"),
+//        Camelot_pvp(10777, "Chest");
 
         public final int ID;
         public final String Type;

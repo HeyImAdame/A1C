@@ -117,7 +117,11 @@ public class A1CBankSkillsPlugin extends Plugin
         if (client.getLocalPlayer().getAnimation() != -1
                 && !(client.getLocalPlayer().getAnimation() == 6294
                 || client.getLocalPlayer().getAnimation() == 4413
-                || client.getLocalPlayer().getAnimation() == 363))
+                || client.getLocalPlayer().getAnimation() == 363
+                || client.getLocalPlayer().getAnimation() == 1248
+                || client.getLocalPlayer().getAnimation() == 884
+                || client.getLocalPlayer().getAnimation() == 6688
+                || client.getLocalPlayer().getAnimation() == 6689))
         {
             timeout = 4;
         }
@@ -255,8 +259,12 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (getInventoryItem(id1) == null || withdrawextratmp > 0) {
             event.setMenuEntry(withdrawItem(id1, skillOpt));
-            withdrawextratmp = withdrawextratmp - 1;
-            timeout = 0;
+            if (config.skill() == Types.Skill.CastSpell)
+            {
+                withdrawextratmp = withdrawextratmp - 1;
+                timeout = 0;
+            }
+            timeout = 1;
             skillStage = "withdrawid1";
             return;
         }
@@ -549,7 +557,11 @@ public class A1CBankSkillsPlugin extends Plugin
         return ((client.getLocalPlayer().getAnimation() != -1
                 && !(client.getLocalPlayer().getAnimation() == 6294
                 || client.getLocalPlayer().getAnimation() == 4413
-                || client.getLocalPlayer().getAnimation() == 363))
+                || client.getLocalPlayer().getAnimation() == 363
+                || client.getLocalPlayer().getAnimation() == 1248
+                || client.getLocalPlayer().getAnimation() == 884
+                || client.getLocalPlayer().getAnimation() == 6688
+                || client.getLocalPlayer().getAnimation() == 6689))
                 || getGameObject(BANKid) == null
                 || timeout > 0
                 || outofMaterials());

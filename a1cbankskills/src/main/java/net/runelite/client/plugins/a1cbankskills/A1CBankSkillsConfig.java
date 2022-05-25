@@ -26,6 +26,17 @@ public interface A1CBankSkillsConfig extends Config
             section = craftsection
     )
     default Types.Skill skill() { return Types.Skill.Use14on14; }
+    @ConfigItem(
+        position = 11,
+        keyName = "customskill",
+        name = "Custom option",
+        description = "Choose",
+        hidden = true,
+        unhide = "skill",
+        unhideValue = "Custom",
+        section = craftsection
+)
+default Types.Skill customskill() { return Types.Skill.Use14on14; }
 
     @ConfigItem(
             position = 20,
@@ -73,17 +84,6 @@ public interface A1CBankSkillsConfig extends Config
             section = craftsection
     )
  default Types.Productcastspell productcastspell()    {return Types.Productcastspell.SUPERGLASSMAKE;}
-    @ConfigItem(
-            position = 10,
-            keyName = "customskill",
-            name = "Custom option",
-            description = "Choose",
-            hidden = true,
-            unhide = "skill",
-            unhideValue = "Custom",
-            section = craftsection
-    )
-    default Types.Skill customskill() { return Types.Skill.Use14on14; }
     @ConfigItem(
             position = 31,
             keyName = "productID",
@@ -154,7 +154,7 @@ public interface A1CBankSkillsConfig extends Config
 
     @ConfigItem(
             position = 60,
-            keyName = "bankType",
+            keyName = "bankname",
             name = "Bank Type",
             description = "Choose",
             section = banksettings
@@ -170,7 +170,7 @@ public interface A1CBankSkillsConfig extends Config
             name = "Bank ID",
             description = "Choose",
             hidden = true,
-            unhide = "bank",
+            unhide = "bankname",
             unhideValue = "Custom",
             section = banksettings
     )
@@ -185,14 +185,11 @@ public interface A1CBankSkillsConfig extends Config
             name = "Bank Type",
             description = "Choose",
             hidden = true,
-            unhide = "bank",
+            unhide = "bankname",
             unhideValue = "Custom",
             section = banksettings
     )
-    default Types.BankType banktype()
-    {
-        return Types.BankType.CHEST;
-    }
+    default Types.BankType banktype() { return Types.BankType.CHEST; }
 /*    @ConfigItem(
             position = 70,
             keyName = "bankID",

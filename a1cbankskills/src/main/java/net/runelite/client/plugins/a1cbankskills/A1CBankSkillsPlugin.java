@@ -1,13 +1,17 @@
 package net.runelite.client.plugins.a1cbankskills;
+import java.awt.*;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.events.GameTick;
-import net.runelite.api.events.ClientTick;
-import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.Point;
+import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.*;
 import net.runelite.api.queries.BankItemQuery;
 import net.runelite.api.queries.GameObjectQuery;
 import net.runelite.api.queries.NPCQuery;
@@ -23,6 +27,8 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.api.events.ItemSpawned;
+import net.runelite.client.plugins.woodcutting.config.ClueNestTier;
 import org.pf4j.Extension;
 
 @Extension
@@ -63,6 +69,8 @@ public class A1CBankSkillsPlugin extends Plugin
     private String BANKTYPE;
     private int BANKid;
     private Types.Skill skillOpt;
+    private ItemSpawned groundItem;
+    private boolean pickupStatus;
 
     @Override
     protected void startUp()
@@ -75,10 +83,12 @@ public class A1CBankSkillsPlugin extends Plugin
         id2 = 0;
         craftNum = 0;
         stuckCounter = 0;
+        updateConfig();
     }
     @Override
     protected void shutDown()
     {
+        updateConfig();
         timeout = 0;
         skillStage = null;
         isFirstDeposit = 1;
@@ -117,6 +127,21 @@ public class A1CBankSkillsPlugin extends Plugin
         updateConfig();
     }
     @Subscribe
+    public void onItemQuantityChanged(ItemQuantityChanged itemQuantityChanged)
+    {
+        TileItem item = itemQuantityChanged.getItem();
+        Tile tile = itemQuantityChanged.getTile();
+        int oldQuantity = itemQuantityChanged.getOldQuantity();
+        int newQuantity = itemQuantityChanged.getNewQuantity();
+
+        int diff = newQuantity - oldQuantity;
+    }
+    @Subscribe
+    public void onItemSpawned(ItemSpawned itemSpawned)
+    {
+            groundItem = itemSpawned;
+    }
+    @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event) throws InterruptedException
     {
 
@@ -150,7 +175,7 @@ public class A1CBankSkillsPlugin extends Plugin
             lastaction = skillStage;
             clickHandler(event);
             debug();
-            if (checkifStuck())
+            if (checkifStuck() && !(skillStage == "pickupGlass"))
             {
                 stuckCounter = stuckCounter +1;
                 return;
@@ -164,6 +189,7 @@ public class A1CBankSkillsPlugin extends Plugin
     {
         if (client.getLocalPlayer() == null
                 || client.getGameState() != GameState.LOGGED_IN
+                || getGameObject(BANKid) == null
                 || client.getWidget(378, 78) != null) //login button
         {
             return;
@@ -188,6 +214,13 @@ public class A1CBankSkillsPlugin extends Plugin
             event.setMenuEntry(useItemOnItem());
             timeout = 1;
             skillStage = "useitemonitem";
+            return;
+        }
+        if (shouldPickUpGlass() || pickupStatus)
+        {
+            event.setMenuEntry(pickUpGlass());
+            timeout = 1;
+            skillStage = "pickupGlass";
             return;
         }
         if (shouldCastSpell())
@@ -219,10 +252,10 @@ public class A1CBankSkillsPlugin extends Plugin
             skillStage = "depositall";
             return;
         }
-        if (getInventoryItem(id1) == null || withdrawextratmp > 1) {
+        if (getInventoryItem(id1) == null || withdrawextratmp > 0) {
             event.setMenuEntry(withdrawItem(id1, skillOpt));
-            withdrawextratmp = withdrawextratmp - countInvIDs(id1);
-            timeout = 1;
+            withdrawextratmp = withdrawextratmp - 1;
+            timeout = 0;
             skillStage = "withdrawid1";
             return;
         }
@@ -241,6 +274,7 @@ public class A1CBankSkillsPlugin extends Plugin
             skillStage = "withdrawid3";
             return;
         }
+        withdrawextratmp = withdrawextra - countInvIDs(id1);
         skillStage = "idle";
     }
     private MenuEntry openBank()
@@ -499,7 +533,7 @@ public class A1CBankSkillsPlugin extends Plugin
                     && getInventoryItem(id1) != null
                     && getInventoryItem(id2) != null
                     && getInventoryItem(id3) != null
-                    && (3 - countInvIDs(id1)) == 0;
+                    && (3 - countInvIDs(id1)) <= 0;
         }
         return skillOpt == Types.Skill.CastSpell
                 && getInventoryItem(id1) != null
@@ -551,6 +585,7 @@ public class A1CBankSkillsPlugin extends Plugin
                 id3 = 12791;
                 withdrawextra = 3;
                 withdrawextratmp = withdrawextra;
+                skillOpt = config.skill();
                 return;
             }
             if (config.skill() == Types.Skill.Custom)
@@ -565,8 +600,7 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         skillOpt = config.skill();
         id3 = -1;
-        withdrawextra = 0;
-        withdrawextratmp = withdrawextra;
+        withdrawextratmp = withdrawextra - countInvIDs(id1);
     }
     private void sendGameMessage(String message)
     {
@@ -616,7 +650,56 @@ public class A1CBankSkillsPlugin extends Plugin
         List<Widget> inventoryWidget = Arrays.asList(client.getWidget(WidgetInfo.INVENTORY.getId()).getDynamicChildren());
         return (inventoryWidget.stream().filter(item -> item.getItemId() == id).count());
     }
-    private boolean checkifStuck(){
+    private boolean checkifStuck() {
         return (lastaction == skillStage);
     }
+    private boolean shouldPickUpGlass() {
+        if (groundItem.getItem().getId() == idprod
+                && !isInvFull())
+        {
+
+            if (groundItem.getTile().getGroundItems() != null
+                    && groundItem.getTile().getGroundItems().stream()
+                    .filter(tileItem -> tileItem.getId() == idprod).count() > 10
+                    || pickupStatus == true)
+            {
+                if (groundItem.getTile().getGroundItems() == null
+                        || groundItem.getTile().getGroundItems().stream()
+                        .filter(tileItem -> tileItem.getId() == idprod).count() == 0)
+                {
+                    pickupStatus = false;
+                    return false;
+                }
+                pickupStatus = true;
+                return true;
+            }
+        }
+        pickupStatus = false;
+        return false;
+    }
+    private MenuEntry pickUpGlass() {
+        TileItem item = groundItem.getItem();
+        Tile tile = groundItem.getTile();
+        if (item == null)
+        {
+            return null;
+        }
+        return client
+                .createMenuEntry(3)
+                .setOption("Take")
+                .setTarget("Molten glass")
+                .setIdentifier(groundItem.getItem().getId())
+                .setType(MenuAction.GROUND_ITEM_THIRD_OPTION)
+                .setParam0(tile.getSceneLocation().getX())
+                .setParam1(tile.getSceneLocation().getX())
+                .setForceLeftClick(false);
+    }
+
+//        return createMenuEntry(
+//                7,
+//                MenuAction.GROUND_ITEM_THIRD_OPTION,
+//                item.getId(),
+//                43,
+//                false);
+//    }
 }

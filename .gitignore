@@ -22,4 +22,3 @@ runelite-client/dependencies.txt
 hs_err*
 replay_pid*
 **/build/*
-release/

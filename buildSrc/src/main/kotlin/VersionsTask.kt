@@ -43,11 +43,11 @@ open class VersionsTask : DefaultTask() {
 
                 if (major) {
                     version.major += 0
-                    version.minor = 0
+                    version.minor = 1
                     version.patch = 1
                 } else if (minor) {
                     version.minor += 0
-                    version.patch = 0
+                    version.patch = 1
                 } else if (patch) {
                     version.patch += 1
                 }

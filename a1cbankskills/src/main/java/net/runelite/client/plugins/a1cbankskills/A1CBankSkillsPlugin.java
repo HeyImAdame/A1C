@@ -245,7 +245,9 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (shouldDeposit())
         {
-            if (isFirstDeposit != 1 && getInventoryItem(idprod) != null)
+            if (isFirstDeposit != 1 && (getInventoryItem(idprod) != null
+                    && getInventoryItem(id1) == null
+                    && getInventoryItem(id2) == null))
             {
                 event.setMenuEntry(depositAllProducts());
                 timeout = 1;
@@ -259,12 +261,12 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (getInventoryItem(id1) == null || withdrawextratmp > 0) {
             event.setMenuEntry(withdrawItem(id1, skillOpt));
+            timeout = 1;
             if (config.skill() == Types.Skill.CastSpell)
             {
-                withdrawextratmp = withdrawextratmp - 1;
+                withdrawextratmp = withdrawextra - countInvIDs(id1);
                 timeout = 0;
             }
-            timeout = 1;
             skillStage = "withdrawid1";
             return;
         }
@@ -283,7 +285,6 @@ public class A1CBankSkillsPlugin extends Plugin
             skillStage = "withdrawid3";
             return;
         }
-        withdrawextratmp = withdrawextra - countInvIDs(id1);
         skillStage = "idle";
     }
     private MenuEntry openBank()
@@ -708,12 +709,4 @@ public class A1CBankSkillsPlugin extends Plugin
                 .setParam1(tile.getSceneLocation().getX())
                 .setForceLeftClick(false);
     }
-
-//        return createMenuEntry(
-//                7,
-//                MenuAction.GROUND_ITEM_THIRD_OPTION,
-//                item.getId(),
-//                43,
-//                false);
-//    }
 }

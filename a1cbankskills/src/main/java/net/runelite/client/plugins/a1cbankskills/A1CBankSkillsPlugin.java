@@ -156,7 +156,8 @@ public class A1CBankSkillsPlugin extends Plugin
                 event.consume();
                 return;
             }
-            if (stuckCounter > 10) {
+            if (stuckCounter > 10
+                    || outofMaterials()) {
                 sendGameMessage("Stuck on step " + action + ". Logging out in 15 seconds.");
                 timeout = 75;
                 return;
@@ -624,6 +625,7 @@ public class A1CBankSkillsPlugin extends Plugin
             || getGameObject(BANKid) == null
             || timeout > 0
             || outofMaterials()
+            || stuckCounter > 10
             || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null);
 }
     private boolean shouldPickUpGlass() {

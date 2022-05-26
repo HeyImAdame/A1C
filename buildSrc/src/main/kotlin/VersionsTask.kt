@@ -21,12 +21,12 @@ open class VersionsTask : DefaultTask() {
     @Suppress("UnstableApiUsage")
     @set:Option(option = "minor", description = "Bump minor version")
     @get:Input
-    var minor: Boolean = true
+    var minor: Boolean = false
 
     @Suppress("UnstableApiUsage")
     @set:Option(option = "patch", description = "Bump patch version")
     @get:Input
-    var patch: Boolean = false
+    var patch: Boolean = true
 
     private fun readFile(fileName: Path): List<String>
             = fileName.toFile().useLines { it.toList() }
@@ -42,12 +42,12 @@ open class VersionsTask : DefaultTask() {
                 val version = SemVer.parse(it.replace("\"", "").replace("version = ", ""))
 
                 if (major) {
-                    version.major += 1
-                    version.minor = 1
-                    version.patch = 1
+                    version.major += 0
+                    version.minor += 1
+                    version.patch += 1
                 } else if (minor) {
                     version.minor += 1
-                    version.patch = 1
+                    version.patch += 1
                 } else if (patch) {
                     version.patch += 1
                 }

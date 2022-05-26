@@ -96,9 +96,46 @@ public class A1CBankSkillsPlugin extends Plugin
         updateConfig();
     }
     @Subscribe
-    public void onItemSpawned(ItemSpawned itemSpawned)
-    {
-            groundItem = itemSpawned;
+    public void onItemSpawned(ItemSpawned itemSpawned) {
+        groundItem = null;
+        groundItem = itemSpawned;
+    }
+    @Subscribe
+    public void onGameTick(GameTick event) {
+        if (timeout > 0) {
+            timeout--;
+        }
+        if (timeout == 50) {
+            timeout = 0;
+            logout();
+            return;
+        }
+        if (client.getLocalPlayer().getAnimation() != -1
+                && !(client.getLocalPlayer().getAnimation() == 6294
+                || client.getLocalPlayer().getAnimation() == 4413
+                || client.getLocalPlayer().getAnimation() == 363)) {
+            timeout = 4;
+        }
+        if ((countInvIDs(idprod) == 27
+                && skillOpt != Types.Skill.CastSpell)
+                || (countInvIDs(idprod) == 14
+                && getInventoryItem(id2) == null)) {
+            timeout = 0;
+        }
+    }
+    @Subscribe
+    private void onClientTick(ClientTick event) {
+        if (client.getLocalPlayer() == null
+                || client.getGameState() != GameState.LOGGED_IN
+                || getGameObject(BANKid) == null
+                || client.getWidget(378, 78) != null) //login button
+        {
+            return;
+        }
+
+        String text = "<col=00ff00>One Click Adam Bank Skillz";
+        client.insertMenuItem(text, "", MenuAction.UNKNOWN.getId(), 0, 0, 0, true);
+        client.setTempMenuEntry(Arrays.stream(client.getMenuEntries()).filter(x -> x.getOption().equals(text)).findFirst().orElse(null));
     }
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event) throws InterruptedException {
@@ -142,46 +179,6 @@ public class A1CBankSkillsPlugin extends Plugin
             }
             stuckCounter = 0;
         }
-    }
-    @Subscribe
-    public void onGameTick(GameTick event) {
-        if (idprod == 0 || id1 == 0 || id2 == 0) {
-            updateConfig();
-        }
-        if (timeout > 0) {
-            timeout--;
-        }
-        if (timeout == 50) {
-            timeout = 0;
-            logout();
-            return;
-        }
-        if (client.getLocalPlayer().getAnimation() != -1
-                && !(client.getLocalPlayer().getAnimation() == 6294
-                || client.getLocalPlayer().getAnimation() == 4413
-                || client.getLocalPlayer().getAnimation() == 363)) {
-            timeout = 4;
-        }
-        if ((countInvIDs(idprod) == 27
-                && skillOpt != Types.Skill.CastSpell)
-                || (countInvIDs(idprod) == 14
-                && getInventoryItem(id2) == null)) {
-            timeout = 0;
-        }
-    }
-    @Subscribe
-    private void onClientTick(ClientTick event) {
-        if (client.getLocalPlayer() == null
-                || client.getGameState() != GameState.LOGGED_IN
-                || getGameObject(BANKid) == null
-                || client.getWidget(378, 78) != null) //login button
-        {
-            return;
-        }
-
-        String text = "<col=00ff00>One Click Adam Bank Skillz";
-        client.insertMenuItem(text, "", MenuAction.UNKNOWN.getId(), 0, 0, 0, true);
-        client.setTempMenuEntry(Arrays.stream(client.getMenuEntries()).filter(x -> x.getOption().equals(text)).findFirst().orElse(null));
     }
 
     //Handles clicks
@@ -256,12 +253,12 @@ public class A1CBankSkillsPlugin extends Plugin
             if (shouldDepositProducts()) {
                 event.setMenuEntry(depositAllProducts());
                 timeout = 1;
-                isFirstDeposit = 0;
                 skillStage = "depositprods";
                 return;
             }
             event.setMenuEntry(depositItems());
             timeout = 1;
+            isFirstDeposit = 0;
             skillStage = "depositall";
             return;
         }
@@ -499,8 +496,9 @@ public class A1CBankSkillsPlugin extends Plugin
     private MenuEntry pickUpGlass() {
         TileItem item = groundItem.getItem();
         Tile tile = groundItem.getTile();
-        if (item == null)
-        {
+        if (item == null
+                && tile.getSceneLocation().getX() == 51
+                && tile.getSceneLocation().getY() == 51) {
             return null;
         }
         return client
@@ -509,8 +507,8 @@ public class A1CBankSkillsPlugin extends Plugin
                 .setTarget("Molten glass")
                 .setIdentifier(groundItem.getItem().getId())
                 .setType(MenuAction.GROUND_ITEM_THIRD_OPTION)
-                .setParam0(tile.getSceneLocation().getX())
-                .setParam1(tile.getSceneLocation().getX())
+                .setParam0(51)
+                .setParam1(51)
                 .setForceLeftClick(false);
     }
 

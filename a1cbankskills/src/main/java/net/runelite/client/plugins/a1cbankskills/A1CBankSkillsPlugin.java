@@ -49,7 +49,7 @@ public class A1CBankSkillsPlugin extends Plugin
     A1CBankSkillsConfig getConfig(ConfigManager configManager) {
         return configManager.getConfig(A1CBankSkillsConfig.class);
     }
-    private String skillStage;
+    private String action;
     private int timeout;
     private int isFirstDeposit;
     private int idprod;
@@ -70,7 +70,7 @@ public class A1CBankSkillsPlugin extends Plugin
     @Override
     protected void startUp() {
         timeout = 0;
-        skillStage = null;
+        action = null;
         isFirstDeposit = 1;
         idprod = 0;
         id1 = 0;
@@ -83,7 +83,7 @@ public class A1CBankSkillsPlugin extends Plugin
     protected void shutDown() {
         updateConfig();
         timeout = 0;
-        skillStage = null;
+        action = null;
         isFirstDeposit = 1;
         idprod = 0;
         id1 = 0;
@@ -112,8 +112,7 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (client.getLocalPlayer().getAnimation() != -1
                 && !(client.getLocalPlayer().getAnimation() == 6294
-                || client.getLocalPlayer().getAnimation() == 4413
-                || client.getLocalPlayer().getAnimation() == 363)) {
+                || client.getLocalPlayer().getAnimation() == 4413)) {
             timeout = 4;
         }
         if ((countInvIDs(idprod) == 27
@@ -139,17 +138,16 @@ public class A1CBankSkillsPlugin extends Plugin
     }
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event) throws InterruptedException {
-        if (event.getMenuOption().equals("<col=00ff00>One Click Adam Bank Skillz"))
-        {
+        if (event.getMenuOption().equals("<col=00ff00>One Click Adam Bank Skillz")) {
             if (isbankOpen()) {
                 if (client.getVarbitValue(6590) != 0) {
                     event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, -1, 786460, false));
-                    skillStage = "setwithdrawOpt";
+                    action = "setwithdrawOpt";
                     return;
                 }
                 if (client.getVarbitValue(Varbits.CURRENT_BANK_TAB) != 0) {
                     event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, 10, WidgetInfo.BANK_TAB_CONTAINER.getId(), false));
-                    skillStage = "setbanktab";
+                    action = "setbanktab";
                     return;
                 }
             } //set bank options
@@ -159,21 +157,21 @@ public class A1CBankSkillsPlugin extends Plugin
                 return;
             }
             if (stuckCounter > 10) {
-                sendGameMessage("Stuck on step " + skillStage + ". Logging out in 15 seconds.");
+                sendGameMessage("Stuck on step " + action + ". Logging out in 15 seconds.");
                 timeout = 75;
                 return;
             }
             int lasttimeout = timeout;
             if (skillOpt == Types.Skill.CastSpell) {
-                lastaction = skillStage;
+                lastaction = action;
                 spellclickHandler(event);
                 debug(lasttimeout);
             } else {
-                lastaction = skillStage;
+                lastaction = action;
                 clickHandler(event);
                 debug(lasttimeout);
             }
-            if (checkifStuck() && !(skillStage == "pickupGlass")) {
+            if (checkifStuck() && !(action == "pickupGlass")) {
                 stuckCounter = stuckCounter +1;
                 return;
             }
@@ -186,46 +184,46 @@ public class A1CBankSkillsPlugin extends Plugin
         if (isCraftingMenuOpen()) {
             event.setMenuEntry(selectCraftOption());
             timeout = 3;
-            skillStage = "pushcraftopt";
+            action = "pushcraftopt";
             return;
         }
         if (useItemOnItem() != null) {
             event.setMenuEntry(useItemOnItem());
             timeout = 1;
-            skillStage = "useitemonitem";
+            action = "useitemonitem";
             return;
         }
         if (!isbankOpen()) {
             event.setMenuEntry(openBank());
             timeout = 1;
-            skillStage = "openbank";
+            action = "openbank";
             return;
         }
         if (shouldDeposit()) {
             if (shouldDepositProducts()) {
                 event.setMenuEntry(depositAllProducts());
                 timeout = 1;
-                skillStage = "depositprods";
+                action = "depositprods";
                 return;
             }
             event.setMenuEntry(depositItems());
             isFirstDeposit = 0;
-            skillStage = "depositall";
+            action = "depositall";
             return;
         }
         if (getInventoryItem(id1) == null) {
             event.setMenuEntry(withdrawItem(id1, skillOpt));
             timeout = 1;
-            skillStage = "withdrawid1";
+            action = "withdrawid1";
             return;
         }
         if (getInventoryItem(id2) == null) {
             event.setMenuEntry(withdrawItem(id2, skillOpt));
             timeout = 1;
-            skillStage = "withdrawid2";
+            action = "withdrawid2";
             return;
         }
-        skillStage = "idle";
+        action = "idle";
     }
 
     //Handles spell clicks
@@ -233,39 +231,39 @@ public class A1CBankSkillsPlugin extends Plugin
         if (shouldPickUpGlass()) {
             event.setMenuEntry(pickUpGlass());
             timeout = 1;
-            skillStage = "pickupGlass";
+            action = "pickupGlass";
             return;
         }
         if (shouldCastSpell()) {
             event.setMenuEntry(castspell());
             withdrawextratmp = withdrawextra;
             timeout = 5;
-            skillStage = "castspell";
+            action = "castspell";
             return;
         }
         if (!isbankOpen()) {
             event.setMenuEntry(openBank());
             timeout = 1;
-            skillStage = "openbank";
+            action = "openbank";
             return;
         }
         if (shouldDeposit()) {
             if (shouldDepositProducts()) {
                 event.setMenuEntry(depositAllProducts());
                 timeout = 1;
-                skillStage = "depositprods";
+                action = "depositprods";
                 return;
             }
             event.setMenuEntry(depositItems());
             timeout = 1;
             isFirstDeposit = 0;
-            skillStage = "depositall";
+            action = "depositall";
             return;
         }
         if (getInventoryItem(id3) == null) {
             event.setMenuEntry(withdrawItem(id3, skillOpt));
             timeout = 0;
-            skillStage = "withdrawid3";
+            action = "withdrawid3";
             return;
         }
         if (id1 != -1 && getInventoryItem(id1) == null
@@ -273,7 +271,7 @@ public class A1CBankSkillsPlugin extends Plugin
             event.setMenuEntry(withdrawItem(id1, skillOpt));
             timeout = 0;
             withdrawextratmp = withdrawextratmp - 1;
-            skillStage = "withdrawid1";
+            action = "withdrawid1";
             if (withdrawextratmp == 0) {
                 timeout = 1;
             }
@@ -284,10 +282,10 @@ public class A1CBankSkillsPlugin extends Plugin
         if (getInventoryItem(id2) == null) {
             event.setMenuEntry(withdrawItem(id2, skillOpt));
             timeout = 2;
-            skillStage = "withdrawid2";
+            action = "withdrawid2";
             return;
         }
-        skillStage = "idle";
+        action = "idle";
     }
 
     //SUBROUTINES
@@ -534,7 +532,7 @@ public class A1CBankSkillsPlugin extends Plugin
     }
     private boolean isCraftingMenuOpen() {
         return client.getWidget(WidgetInfo.MULTI_SKILL_MENU) != null
-                && skillStage == "useitemonitem";
+                && action == "useitemonitem";
     }
     private boolean shouldDeposit() {
         long cEmpty = countInvIDs(6512);
@@ -651,7 +649,7 @@ public class A1CBankSkillsPlugin extends Plugin
         return false;
     }
     private boolean checkifStuck() {
-        return (lastaction == skillStage);
+        return (lastaction == action);
     }
 
     //EXTRAS
@@ -678,7 +676,7 @@ public class A1CBankSkillsPlugin extends Plugin
         }
     }
     private void debug(int timeOut) {
-        System.out.println("skillstage=" + skillStage + " timeout=" + timeOut
+        System.out.println("action=" + action + " timeout=" + timeOut
                 + " stuckCounter=" + stuckCounter + " withdrawextratmp=" + withdrawextratmp
                 + " shouldconsume=" + shouldConsume());
     }

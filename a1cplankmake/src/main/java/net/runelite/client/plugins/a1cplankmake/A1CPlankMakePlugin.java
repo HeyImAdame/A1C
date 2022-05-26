@@ -119,6 +119,7 @@ public class A1CPlankMakePlugin extends Plugin
                 0,
                 0,
                 true);
+        client.setTempMenuEntry(Arrays.stream(client.getMenuEntries()).filter(x -> x.getOption().equals(text)).findFirst().orElse(null));
     }
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event) throws InterruptedException {

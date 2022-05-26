@@ -25,7 +25,7 @@ import ProjectVersions.rlVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 //
-version = "1337.10.5"
+version = "1337.10.6"
 
 project.extra["PluginName"] = "A1C AutoClicker"
 project.extra["PluginDescription"] = "The better clicks"

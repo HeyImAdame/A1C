@@ -108,10 +108,14 @@ public class A1CAutoClick extends Plugin
 			{
 				while (run)
 				{
+					if (client.getGameState() == GameState.LOGIN_SCREEN)
+					{
+						run = false;
+						break;
+					}
 					if (client.getGameState() != GameState.LOGGED_IN)
 					{
-						if (client.getGameState() != GameState.LOGIN_SCREEN ||
-								ticksLogged > 10)
+						if (ticksLogged > 10)
 						{
 							run = false;
 							break;

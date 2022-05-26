@@ -158,7 +158,8 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         if (client.getLocalPlayer().getAnimation() != -1
                 && !(client.getLocalPlayer().getAnimation() == 6294
-                || client.getLocalPlayer().getAnimation() == 4413)) {
+                || client.getLocalPlayer().getAnimation() == 4413
+                || client.getLocalPlayer().getAnimation() == 363)) {
             timeout = 4;
         }
         if ((countInvIDs(idprod) == 27

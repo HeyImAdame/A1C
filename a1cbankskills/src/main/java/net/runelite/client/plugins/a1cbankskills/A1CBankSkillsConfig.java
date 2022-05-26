@@ -10,7 +10,6 @@ import static net.runelite.api.widgets.WidgetInfo.SPELL_HUMIDIFY;
 @ConfigGroup("a1cbankskills")
 public interface A1CBankSkillsConfig extends Config
 {
-
     @ConfigSection(
             name = "Crafting Settings",
             description = "Configure settings for crafting",
@@ -18,6 +17,7 @@ public interface A1CBankSkillsConfig extends Config
             keyName = "craftsection"
     )
     String craftsection = "Crafting Details";
+
     @ConfigItem(
             position = 10,
             keyName = "skill",
@@ -26,6 +26,7 @@ public interface A1CBankSkillsConfig extends Config
             section = craftsection
     )
     default Types.Skill skill() { return Types.Skill.Use14on14; }
+
     @ConfigItem(
         position = 11,
         keyName = "customskill",
@@ -35,8 +36,8 @@ public interface A1CBankSkillsConfig extends Config
         unhide = "skill",
         unhideValue = "Custom",
         section = craftsection
-)
-default Types.Skill customskill() { return Types.Skill.Use14on14; }
+    )
+    default Types.Skill customskill() { return Types.Skill.Use14on14; }
 
     @ConfigItem(
             position = 20,
@@ -49,6 +50,7 @@ default Types.Skill customskill() { return Types.Skill.Use14on14; }
     {
         return true;
     }
+
     @ConfigItem(
             position = 28,
             keyName = "14on14product",
@@ -60,6 +62,7 @@ default Types.Skill customskill() { return Types.Skill.Use14on14; }
             section = craftsection
     )
     default Types.Productuse14on14 product14on14() { return Types.Productuse14on14.SUPER_ATTACK; }
+
     @ConfigItem(
             position = 29,
             keyName = "1on27product",
@@ -73,6 +76,7 @@ default Types.Skill customskill() { return Types.Skill.Use14on14; }
     default Types.Productuse1on27 product1on27()    {
         return Types.Productuse1on27.EMPTY_LIGHT_ORB;
     }
+
     @ConfigItem(
             position = 30,
             keyName = "productcastspell",
@@ -83,7 +87,8 @@ default Types.Skill customskill() { return Types.Skill.Use14on14; }
             unhideValue = "CastSpell",
             section = craftsection
     )
- default Types.Productcastspell productcastspell()    {return Types.Productcastspell.SUPERGLASSMAKE;}
+    default Types.Productcastspell productcastspell()    {return Types.Productcastspell.SUPERGLASSMAKE;}
+
     @ConfigItem(
             position = 31,
             keyName = "productID",
@@ -144,6 +149,20 @@ default Types.Skill customskill() { return Types.Skill.Use14on14; }
         return 1;
     }
 
+    @ConfigItem(
+            position = 51,
+            keyName = "pickupSP",
+            name = "Pickup threshold",
+            description = "Number to start picking up glass",
+            hidden = true,
+            unhide = "productcastspell",
+            unhideValue = "SUPERGLASSMAKE",
+            section = craftsection
+    )
+    default int pickupSP()
+    {
+        return 10;
+    }
     @ConfigSection(
             name = "Bank Settings",
             description = "Configure settings for banking",
@@ -190,15 +209,4 @@ default Types.Skill customskill() { return Types.Skill.Use14on14; }
             section = banksettings
     )
     default Types.BankType banktype() { return Types.BankType.CHEST; }
-/*    @ConfigItem(
-            position = 70,
-            keyName = "bankID",
-            name = "Bank ID",
-            description = "Input bank ID, supports chests/NPCs/Booths",
-            section = banksettings
-    )
-    default int bankID()
-    {
-        return 30796;
-    }*/
 }

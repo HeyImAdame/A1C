@@ -78,7 +78,7 @@ public class Types
     }
 
     public enum Productcastspell {
-        HUMIDIFY(1937, 12791, 1935, -1, WidgetInfo.SPELL_HUMIDIFY),
+        HUMIDIFY(1937, -1, 1935, -1, WidgetInfo.SPELL_HUMIDIFY),
         SUPERGLASSMAKE(1775, 21504, 1783, -1, WidgetInfo.SPELL_SUPERGLASS_MAKE);
 
         public int productid;

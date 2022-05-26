@@ -68,6 +68,19 @@ public class A1CPlankMakePlugin extends Plugin
         bankID = 0;
         forcelogout = 0;
         stuckCounter = 0;
+        updateConfig();
+    }
+    @Override
+    protected void shutDown() throws Exception
+    {
+        updateConfig();
+        timeout = 0;
+        action = "";
+        logID = 0;
+        plankID = 0;
+        bankID = 0;
+        forcelogout = 0;
+        stuckCounter = 0;
     }
 
     @Subscribe

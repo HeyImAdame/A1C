@@ -338,6 +338,7 @@ public class A1CBankSkillsPlugin extends Plugin
         if (config.bank() == Types.Banks.Custom) {
             BANKTYPE = config.banktype().Type;
             BANKid = config.bankid();
+            return;
         }
         BANKTYPE = config.bank().Type;
         BANKid = config.bank().ID;

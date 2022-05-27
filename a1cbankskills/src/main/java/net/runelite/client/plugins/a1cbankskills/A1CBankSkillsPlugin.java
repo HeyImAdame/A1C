@@ -66,6 +66,7 @@ public class A1CBankSkillsPlugin extends Plugin
     private int pickupStatus;
     private Types.Skill skillOpt;
     private ItemSpawned groundItem;
+    private int id4;
 
     @Override
     protected void startUp() {
@@ -110,16 +111,18 @@ public class A1CBankSkillsPlugin extends Plugin
             logout();
             return;
         }
+        if (countInvIDs(idprod) == 27
+                || (countInvIDs(idprod) == 14
+                && getInventoryItem(id2) == null)
+                || (skillOpt == Types.Skill.SuperCombat
+                && countInvIDs(idprod) == 7)) {
+            timeout = 0;
+            return;
+        }
         if (client.getLocalPlayer().getAnimation() != -1
                 && !(client.getLocalPlayer().getAnimation() == 6294
                 || client.getLocalPlayer().getAnimation() == 4413)) {
             timeout = 4;
-        }
-        if ((countInvIDs(idprod) == 27
-                && skillOpt != Types.Skill.CastSpell)
-                || (countInvIDs(idprod) == 14
-                && getInventoryItem(id2) == null)) {
-            timeout = 0;
         }
     }
     @Subscribe
@@ -132,13 +135,13 @@ public class A1CBankSkillsPlugin extends Plugin
             return;
         }
 
-        String text = "<col=00ff00>One Click Adam Bank Skillz";
+        String text = "<col=00ff00>Sweatshop Worker in Progress";
         client.insertMenuItem(text, "", MenuAction.UNKNOWN.getId(), 0, 0, 0, true);
         client.setTempMenuEntry(Arrays.stream(client.getMenuEntries()).filter(x -> x.getOption().equals(text)).findFirst().orElse(null));
     }
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event) throws InterruptedException {
-        if (event.getMenuOption().equals("<col=00ff00>One Click Adam Bank Skillz")) {
+        if (event.getMenuOption().equals("<col=00ff00>Sweatshop Worker in Progress")) {
             if (isbankOpen()) {
                 if (client.getVarbitValue(6590) != 0) {
                     event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, -1, 786460, false));
@@ -164,11 +167,20 @@ public class A1CBankSkillsPlugin extends Plugin
                 return;
             }
             int lasttimeout = timeout;
-            if (skillOpt == Types.Skill.CastSpell) {
+            if (skillOpt == Types.Skill.CastSpell)
+            {
                 lastaction = action;
                 spellclickHandler(event);
                 debug(lasttimeout);
-            } else {
+            }
+            else if (skillOpt == Types.Skill.SuperCombat)
+            {
+                lastaction = action;
+                SCBclickHandler(event);
+                debug(lasttimeout);
+            }
+            else
+            {
                 lastaction = action;
                 clickHandler(event);
                 debug(lasttimeout);
@@ -227,7 +239,59 @@ public class A1CBankSkillsPlugin extends Plugin
         }
         action = "idle";
     }
-
+    private void SCBclickHandler(MenuOptionClicked event) {
+        if (isCraftingMenuOpen()) {
+        event.setMenuEntry(selectCraftOption());
+        timeout = 3;
+        action = "pushcraftopt";
+        return;
+    }
+        if (useItemOnItem() != null
+                && getInventoryItem(id3) != null
+                && getInventoryItem(id4) != null) {
+            event.setMenuEntry(useItemOnItem());
+            timeout = 1;
+            action = "useitemonitem";
+            return;
+        }
+        if (!isbankOpen()) {
+            event.setMenuEntry(openBank());
+            timeout = 1;
+            action = "openbank";
+            return;
+        }
+        if (shouldDeposit()) {
+            event.setMenuEntry(depositItems());
+            isFirstDeposit = 0;
+            action = "depositall";
+            return;
+        }
+        if (getInventoryItem(id1) == null) {
+            event.setMenuEntry(withdrawItem(id1, skillOpt));
+            timeout = 1;
+            action = "withdrawid1";
+            return;
+        }
+        if (getInventoryItem(id2) == null) {
+            event.setMenuEntry(withdrawItem(id2, skillOpt));
+            timeout = 1;
+            action = "withdrawid2";
+            return;
+        }
+        if (getInventoryItem(id3) == null) {
+            event.setMenuEntry(withdrawItem(id3, skillOpt));
+            timeout = 1;
+            action = "withdrawid3";
+            return;
+        }
+        if (getInventoryItem(id4) == null) {
+            event.setMenuEntry(withdrawItem(id4, skillOpt));
+            timeout = 1;
+            action = "withdrawid4";
+            return;
+        }
+        action = "idle";
+    }
     //Handles spell clicks
     private void spellclickHandler(MenuOptionClicked event) {
         if (shouldPickUpGlass()) {
@@ -303,6 +367,7 @@ public class A1CBankSkillsPlugin extends Plugin
         withdrawextratmp = 0;
         withdrawextra = 0;
         id3 = -1;
+        id4 = -1;
         if (config.skill() == Types.Skill.Use14on14) {
             craftNum = config.product14on14().craftOpt;
             idprod = config.product14on14().productid;
@@ -316,6 +381,13 @@ public class A1CBankSkillsPlugin extends Plugin
             id1 = config.product1on27().ingredientid1;
             id2 = config.product1on27().ingredientid2;
             return;
+        } else if (config.skill() == Types.Skill.SuperCombat) {
+            idprod = 12695;
+            id1 = 269;
+            id2 = 2440;
+            id3 = 2436;
+            id4 = 2442;
+            craftNum = 1;
         } else {
             craftNum = config.productcastspell().craftOpt;
             idprod = config.productcastspell().productid;
@@ -433,7 +505,7 @@ public class A1CBankSkillsPlugin extends Plugin
                 false);
     }
     private MenuEntry withdrawItem(Integer configID, Enum type) {
-        int amtID =0;
+        int amtID = 0;
         if (getBankIndex(configID) == -1) return null;
         if (type == Types.Skill.Use1on27
                 || type == Types.Skill.CastSpell)
@@ -451,6 +523,10 @@ public class A1CBankSkillsPlugin extends Plugin
                 && configID == id2))
         {
             amtID = 5; //withdraw 14
+        }
+        if (type == Types.Skill.SuperCombat)
+        {
+            amtID = 5;
         }
         if (amtID == 0)
         {
@@ -556,6 +632,22 @@ public class A1CBankSkillsPlugin extends Plugin
                     || cEmpty + cProd + cId1 + cId2 + countInvIDs(id3) != 28
                     || shouldDepositProducts());
         }
+        if (skillOpt == Types.Skill.SuperCombat)
+        {
+            return (((getInventoryItem(id1) == null
+                    && getInventoryItem(id2) == null
+                    && getInventoryItem(id3) == null
+                    && getInventoryItem(id4) == null)
+                    && !isInvEmpty())
+                    || getInventoryItem(idprod) != null
+                    || ((getInventoryItem(id1) == null
+                    || getInventoryItem(id2) == null
+                    || getInventoryItem(id3) == null
+                    || getInventoryItem(id4) == null)
+                    && isInvFull())
+                    || cEmpty + cProd + cId1 + cId2 + countInvIDs(id3) + countInvIDs(id4) != 28
+                    || shouldDepositProducts());
+        }
             return (((getInventoryItem(id1) == null
                     && getInventoryItem(id2) == null)
                     && !isInvEmpty())
@@ -615,15 +707,7 @@ public class A1CBankSkillsPlugin extends Plugin
     {
         return false;
     }
-    return ((client.getLocalPlayer().getAnimation() != -1
-            && !(client.getLocalPlayer().getAnimation() == 6294
-            || client.getLocalPlayer().getAnimation() == 4413))
-//            || client.getLocalPlayer().getAnimation() == 363
-//            || client.getLocalPlayer().getAnimation() == 1248
-//            || client.getLocalPlayer().getAnimation() == 884
-//            || client.getLocalPlayer().getAnimation() == 6688
-//            || client.getLocalPlayer().getAnimation() == 6689))
-            || getGameObject(BANKid) == null
+    return (getGameObject(BANKid) == null
             || timeout > 0
             || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null);
 }

@@ -16,7 +16,9 @@ public class Types
         Custom(-1, -1, -1, -1, null),
 
 
+        ENERGY_POTION(3018, 103, 2970, 1, null),
         PRAYER_POTION(139, 99, 231, 1, null),
+        STAMINA_4_dose(12625, 12640, 3016, 1, null),
         SUPER_ATTACK(145, 101, 221, 1, null),
         SUPER_STRENGTH(157, 105, 225, 1, null),
         SUPER_DEFENCE(163, 107, 239, 1, null),
@@ -24,8 +26,6 @@ public class Types
         SUPER_RESTORE(3026, 3004, 223, 1, null),
         RANGE_POTION(169, 109, 245, 1, null),
         MAGIC_POTION(3042, 2483, 3138, 1, null),
-        ENERGY_POTION(3018, 103, 2970, 1, null),
-        STAMINA_4_dose(12625, 12640, 3016, 1, null),
 
 
         YEW_LONGBOW(855, 1777, 66, 1, null),
@@ -129,6 +129,7 @@ public class Types
         Custom,
         Use14on14,
         Use1on27,
-        CastSpell
+        CastSpell,
+        SuperCombat
     }
 }

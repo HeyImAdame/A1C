@@ -155,8 +155,8 @@ public interface A1CBankSkillsConfig extends Config
             name = "Pickup threshold",
             description = "Number to start picking up glass",
             hidden = true,
-            unhide = "productcastspell",
-            unhideValue = "SUPERGLASSMAKE",
+            unhide = "skill",
+            unhideValue = "Castspell",
             section = craftsection
     )
     default int pickupSP()

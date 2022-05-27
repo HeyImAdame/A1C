@@ -105,10 +105,10 @@ public class A1CPlankMakePlugin extends Plugin
         {
             return;
         }
-        if (!(isInPOH() || isAtBank())) return;
+        if (!(isInPOH() || !isAtBank())) return;
         String text;
         {
-            text =  "<col=00ff00>One Click Adam Plank Make";
+            text =  "<col=00ff00>Adam Board Generator";
         }
 
         client.insertMenuItem(
@@ -123,7 +123,7 @@ public class A1CPlankMakePlugin extends Plugin
     }
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event) throws InterruptedException {
-        if (event.getMenuOption().equals("<col=00ff00>One Click Adam Plank Make")) {
+        if (event.getMenuOption().equals("<col=00ff00>Adam Board Generator")) {
             if (isbankOpen()) {
                 if (client.getVarbitValue(6590) != 0) {
                     event.setMenuEntry(createMenuEntry(1, MenuAction.CC_OP, -1, 786460, false));
@@ -136,15 +136,18 @@ public class A1CPlankMakePlugin extends Plugin
                     return;
                 }
             } //set bank options
+            if (shouldConsume()) {
+                System.out.println("Consumed. Timeout = " + timeout);
+                event.consume();
+                return;
+            }
             if (!hasItems()) {
                 sendGameMessage("Missing items. Need at least 50k and law runes.");
+                event.consume();
+                return;
             }
             if (!goodSpellbook()) {
                 sendGameMessage("Wrong spellbook. Must be on standard.");
-            }
-            if (shouldConsume() || timeout > 50
-                    || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null) {
-                System.out.println("Consumed. Timeout = " + timeout);
                 event.consume();
                 return;
             }
@@ -488,9 +491,8 @@ public class A1CPlankMakePlugin extends Plugin
         }
         return (client.getLocalPlayer().getAnimation() != -1
                 || timeout > 0
-                || outofMaterials()
-                || !goodSpellbook()
-                || !hasItems());
+                || !hasItems()
+                || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null);
     }
 
     //EXTRAS

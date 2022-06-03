@@ -25,6 +25,8 @@ import org.pf4j.Extension;
 import java.util.Arrays;
 import java.util.List;
 
+import static net.runelite.api.ObjectID.CONVEYOR_BELT;
+
 @Extension
 @PluginDescriptor(
         name = "A1C Bloods Morytania",
@@ -40,7 +42,7 @@ public class A1CBloodsPlugin extends Plugin {
     @Inject
     private A1CBloodsConfig config;
     @Provides
-    A1CBloodsConfig provideConfig(ConfigManager configManager) {
+    A1CBloodsConfig providesConfig(ConfigManager configManager) {
         return configManager.getConfig(A1CBloodsConfig.class);
     }
 

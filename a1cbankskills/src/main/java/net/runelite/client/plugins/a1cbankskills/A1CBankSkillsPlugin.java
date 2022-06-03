@@ -67,6 +67,10 @@ public class A1CBankSkillsPlugin extends Plugin
     private Types.Skill skillOpt;
     private ItemSpawned groundItem;
     private int id4;
+    private int lasttick;
+    private int iter;
+    private int forcelogout = 0;
+    private long lastinvCount;
 
     @Override
     protected void startUp() {
@@ -186,7 +190,7 @@ public class A1CBankSkillsPlugin extends Plugin
                 debug(lasttimeout);
             }
             if (checkifStuck() && !(action == "pickupGlass")) {
-                stuckCounter = stuckCounter +1;
+                stuckCounter = stuckCounter + 1;
                 return;
             }
             stuckCounter = 0;
@@ -295,11 +299,22 @@ public class A1CBankSkillsPlugin extends Plugin
     //Handles spell clicks
     private void spellclickHandler(MenuOptionClicked event) {
         if (shouldPickUpGlass()) {
+            if (iter == 0) {
+                lasttick = client.getTickCount();
+            }
             event.setMenuEntry(pickUpGlass());
             timeout = 1;
             action = "pickupGlass";
+            if (lasttick != client.getTickCount() && getInventoryItem(idprod) != null
+                    && lastinvCount == countInvIDs(idprod)) {
+                iter = iter + 1;
+                if (iter > 6) {
+                    forcelogout = 1;
+                }
+            }
             return;
         }
+        iter = 0;
         if (shouldCastSpell()) {
             event.setMenuEntry(castspell());
             withdrawextratmp = withdrawextra;
@@ -396,6 +411,7 @@ public class A1CBankSkillsPlugin extends Plugin
             id3 = 12791;
             if (config.productcastspell() == Types.Productcastspell.SUPERGLASSMAKE)
             {
+                iter = 0;
                 pickupStatus = 0;
                 withdrawextratmp =0;
                 withdrawextra = 3;
@@ -709,6 +725,7 @@ public class A1CBankSkillsPlugin extends Plugin
     }
     return (getGameObject(BANKid) == null
             || timeout > 0
+            || forcelogout == 1
             || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null);
 }
     private boolean shouldPickUpGlass() {

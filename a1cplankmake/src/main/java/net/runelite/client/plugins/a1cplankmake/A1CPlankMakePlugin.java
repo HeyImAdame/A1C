@@ -105,11 +105,9 @@ public class A1CPlankMakePlugin extends Plugin
         {
             return;
         }
-        if (!(isInPOH() || !isAtBank())) return;
+        if (!(isInPOH() || isAtBank())) {return;}
         String text;
-        {
             text =  "<col=00ff00>Adam Board Generator";
-        }
 
         client.insertMenuItem(
                 text,
@@ -206,6 +204,11 @@ public class A1CPlankMakePlugin extends Plugin
             event.setMenuEntry(depositPlanks());
             timeout = 1;
             action = "Depositing planks";
+            return;
+        }
+        if (outofMaterials()) {
+            forcelogout = 1;
+            action = "outofMaterials";
             return;
         }
         event.setMenuEntry(withdrawItem(logID));
@@ -491,7 +494,6 @@ public class A1CPlankMakePlugin extends Plugin
         }
         return (client.getLocalPlayer().getAnimation() != -1
                 || timeout > 0
-                || !hasItems()
                 || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null);
     }
 

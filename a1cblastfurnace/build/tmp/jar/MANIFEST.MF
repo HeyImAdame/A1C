@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Plugin-Version: 1337.2.1
+Plugin-Id: acblastfurnace-plugin
+Plugin-Provider: HeyImAdame
+Plugin-Description: Adam Bar Provider
+Plugin-License: 3-Clause BSD License
+

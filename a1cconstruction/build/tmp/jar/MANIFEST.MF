@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Plugin-Version: 1337.10.10
+Plugin-Id: acconstruction-plugin
+Plugin-Provider: HeyImAdame
+Plugin-Description: Adam Construction
+Plugin-License: 3-Clause BSD License
+

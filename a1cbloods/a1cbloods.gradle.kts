@@ -1,6 +1,6 @@
 import ProjectVersions.rlVersion
 
-version = "1337.10.8"
+version = "1337.10.10"
 
 project.extra["PluginName"] = "A1C Bloods Morytania" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Active One Click Bloods Runecrafting at the new altar" // This is the description that is used in the external plugin manager panel

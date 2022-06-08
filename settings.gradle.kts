@@ -32,6 +32,7 @@ include(":a1cplankmake")
 include(":a1cscheduledlogout")
 include(":a1cblastfurnace")
 include(":a1ccooking")
+include(":a1cconstruction")
 
 for (project in rootProject.children) {
     project.apply {

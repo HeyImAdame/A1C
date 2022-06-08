@@ -103,6 +103,7 @@ public class Types
 
         Seers(25808, "Booth"),
         Edgeville(10355,"Booth"),
+        Fossil_Island(30796,"Chest"),
         CWars(4483, "Chest");
         public final int ID;
         public final String Type;

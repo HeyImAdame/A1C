@@ -25,10 +25,10 @@ import ProjectVersions.rlVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1337.10.10"
+version = "1337.0.3"
 
-project.extra["PluginName"] = "A1C Bank Skillz" // This is the name that is used in the external plugin manager panel
-project.extra["PluginDescription"] = "OP Bank Skillz" // This is the description that is used in the external plugin manager panel
+project.extra["PluginName"] = "A1C Cooking" // This is the name that is used in the external plugin manager panel
+project.extra["PluginDescription"] = "Range Cooking for Fish n Things" // This is the description that is used in the external plugin manager panel
 
 dependencies {
     annotationProcessor(Libraries.lombok)

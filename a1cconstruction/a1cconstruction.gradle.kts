@@ -27,15 +27,15 @@ import ProjectVersions.rlVersion
 
 version = "1337.10.10"
 
-project.extra["PluginName"] = "A1C Bank Skillz" // This is the name that is used in the external plugin manager panel
-project.extra["PluginDescription"] = "OP Bank Skillz" // This is the description that is used in the external plugin manager panel
+project.extra["PluginName"] = "A1C Construction" // This is the name that is used in the external plugin manager panel
+project.extra["PluginDescription"] = "Adam Construction" // This is the description that is used in the external plugin manager panel
 
 dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
 
-    compileOnly("com.openosrs:runelite-api:$rlVersion+")
-    compileOnly("com.openosrs:runelite-client:$rlVersion+")
+    compileOnly("com.openosrs:runelite-api:$rlVersion")
+    compileOnly("com.openosrs:runelite-client:$rlVersion")
 
     compileOnly(Libraries.guice)
     compileOnly(Libraries.lombok)

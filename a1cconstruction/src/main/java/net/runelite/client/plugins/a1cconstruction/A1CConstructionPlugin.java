@@ -3,10 +3,12 @@ package net.runelite.client.plugins.a1cconstruction;
 import javax.inject.Inject;
 import com.google.inject.Provides;
 import net.runelite.api.*;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.queries.BankItemQuery;
+import net.runelite.rs.api.RSClient;
 import net.runelite.api.queries.GameObjectQuery;
 import net.runelite.api.queries.NPCQuery;
 import net.runelite.api.widgets.Widget;
@@ -52,9 +54,8 @@ public class A1CConstructionPlugin extends Plugin
     private int stuckCounter;
     private String lastaction;
     private boolean unnoting;
-    private boolean bench1;
-    private boolean bench2;
     private int buildstep;
+    private WorldPoint startLoc;
 
     @Override
     protected void startUp() throws Exception {
@@ -66,6 +67,9 @@ public class A1CConstructionPlugin extends Plugin
         emptyslots = 0;
         unnoting = false;
         buildstep = 1;
+        startLoc = new WorldPoint(client.getLocalPlayer().getWorldLocation().getX()
+                ,client.getLocalPlayer().getWorldLocation().getY()
+                ,client.getLocalPlayer().getWorldLocation().getPlane());
     }
     @Override
     protected void shutDown() throws Exception {
@@ -244,6 +248,11 @@ public class A1CConstructionPlugin extends Plugin
 
     private void handleTeakClick(MenuOptionClicked event)
     {
+        if (!isAtStartLoc()) {
+            walkTile(startLoc);
+            action = "walkTile";
+            timeout = 4;
+        }
         if (shouldClickContinue()) {
             if ((client.getWidget(219, 1) != null
                     && client.getWidget(219, 1).getChild(1).getText().contains("Un-note:"))
@@ -262,7 +271,7 @@ public class A1CConstructionPlugin extends Plugin
             } else {
                 event.setMenuEntry(clickContinueMES());
                 action = "clickcontinue";
-                timeout = 1;
+                timeout = 0;
                 return;
             }
         }
@@ -568,8 +577,20 @@ public class A1CConstructionPlugin extends Plugin
                 24248339,
                 false);
     }
+    private void walkTile(WorldPoint worldpoint) {
+        int x = worldpoint.getX() - client.getBaseX();
+        int y = worldpoint.getY() - client.getBaseY();
+        RSClient rsClient = (RSClient) client;
+        rsClient.setSelectedSceneTileX(x);
+        rsClient.setSelectedSceneTileY(y);
+        rsClient.setViewportWalking(true);
+        rsClient.setCheckClick(false);
+    }
 
     //BOOLEANS
+    private boolean isAtStartLoc() {
+        return (client.getLocalPlayer().getWorldLocation().distanceTo(startLoc) == 0);
+    }
     private boolean shouldGetButlerPlanks() {
         return (countInvIDs(config.build().plankID) < 13
                 && getEmptySlots() > 0
@@ -601,7 +622,7 @@ public class A1CConstructionPlugin extends Plugin
         if (npc == null) {
             return false;
         }
-        return (npc.getWorldLocation().distanceTo(client.getLocalPlayer().getWorldLocation()) < 5);
+        return (npc.getWorldLocation().distanceTo(client.getLocalPlayer().getWorldLocation()) < 2);
     }
     private boolean shouldClickContinue() {
         if (client.getWidget(231, 5) == null) {

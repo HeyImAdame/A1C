@@ -422,6 +422,40 @@ public class A1CConstructionPlugin extends Plugin
 
     //ACTIONS
     private MenuEntry removeMenu(GameObject G) {
+        if (config.build() == Types.Build.MAHOGANY_BENCH) {
+            if (action == "remove1") {
+                //GameObject G = getObjectinRange(config.build().builtID);
+                if (G == null) {
+                    return null;
+                }
+                //buildstep = 4;
+                return client
+                        .createMenuEntry(0)
+                        .setOption("Remove")
+                        .setTarget("Mahogany bench")
+                        .setIdentifier(config.build().builtID)
+                        .setType(MenuAction.GAME_OBJECT_FIFTH_OPTION)
+                        .setParam0(getLocation(G).getX())
+                        .setParam1(getLocation(G).getY())
+                        .setForceLeftClick(false);
+            }
+            else if (action == "remove2") {
+                //GameObject G = getObjectinRange(config.build().builtID2);
+                if (G == null) {
+                    return null;
+                }
+                //buildstep = 1;
+                return client
+                        .createMenuEntry(0)
+                        .setOption("Remove")
+                        .setTarget("Mahogany bench")
+                        .setIdentifier(config.build().builtID2)
+                        .setType(MenuAction.GAME_OBJECT_FIFTH_OPTION)
+                        .setParam0(getLocation(G).getX())
+                        .setParam1(getLocation(G).getY())
+                        .setForceLeftClick(false);
+            }
+        }
         if (config.build() == Types.Build.TEAK_BENCH) {
             if (action == "remove1") {
                 //GameObject G = getObjectinRange(config.build().builtID);
@@ -470,7 +504,8 @@ public class A1CConstructionPlugin extends Plugin
         return null;
     }
     private MenuEntry buildMenu(GameObject G) {
-        if (config.build() == Types.Build.TEAK_BENCH) {
+        if (config.build() == Types.Build.TEAK_BENCH
+                || config.build() == Types.Build.MAHOGANY_BENCH) {
             if (action == "build1") {
                 //GameObject G = getObjectinRange(config.build().unbuiltID);
                 if (G == null) {

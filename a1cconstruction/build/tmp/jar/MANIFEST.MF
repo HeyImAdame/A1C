@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Plugin-Version: 1337.10.12
+Plugin-Version: 1337.10.13
 Plugin-Id: acconstruction-plugin
 Plugin-Provider: HeyImAdame
 Plugin-Description: Adam Construction

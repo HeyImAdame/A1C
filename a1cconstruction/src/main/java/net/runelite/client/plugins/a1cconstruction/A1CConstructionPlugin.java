@@ -432,7 +432,7 @@ public class A1CConstructionPlugin extends Plugin
                 return client
                         .createMenuEntry(0)
                         .setOption("Remove")
-                        .setTarget("Mahogany bench")
+                        .setTarget("Gnome bench")
                         .setIdentifier(config.build().builtID)
                         .setType(MenuAction.GAME_OBJECT_FIFTH_OPTION)
                         .setParam0(getLocation(G).getX())
@@ -448,7 +448,7 @@ public class A1CConstructionPlugin extends Plugin
                 return client
                         .createMenuEntry(0)
                         .setOption("Remove")
-                        .setTarget("Mahogany bench")
+                        .setTarget("Gnome bench")
                         .setIdentifier(config.build().builtID2)
                         .setType(MenuAction.GAME_OBJECT_FIFTH_OPTION)
                         .setParam0(getLocation(G).getX())

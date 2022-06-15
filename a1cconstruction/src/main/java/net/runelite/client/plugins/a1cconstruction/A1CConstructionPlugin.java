@@ -179,6 +179,11 @@ public class A1CConstructionPlugin extends Plugin
     //Handle clicks
     private void handleMahoganyClick(MenuOptionClicked event)
     {
+        if (!isAtStartLoc()) {
+            walkTile(startLoc);
+            action = "walkTile";
+            timeout = 4;
+        }
         if (shouldClickContinue()) {
             if (client.getWidget(219, 1) != null
                     && client.getWidget(219, 1).getChild(1).getText().contains("Un-note:")) {
@@ -302,7 +307,7 @@ public class A1CConstructionPlugin extends Plugin
             }
             event.setMenuEntry(clickButler());
             action = "clickbutler";
-            timeout = 1;
+            timeout = 0;
             return;
         }
 

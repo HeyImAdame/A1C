@@ -209,6 +209,7 @@ public class A1CPlankMakePlugin extends Plugin
         if (outofMaterials()) {
             forcelogout = 1;
             action = "outofMaterials";
+            event.consume();
             return;
         }
         event.setMenuEntry(withdrawItem(logID));
@@ -220,6 +221,7 @@ public class A1CPlankMakePlugin extends Plugin
         if (!client.getWidget(162, 42).isHidden()) {
             sendGameMessage("Butler not setup to take x26 to the sawmill.");
             forcelogout = 1;
+            event.consume();
             return;
         } //check butler setup
         if (client.getWidget(219, 1) != null) {
@@ -231,6 +233,7 @@ public class A1CPlankMakePlugin extends Plugin
             }
             sendGameMessage("Butler not setup to take x26 to the sawmill.");
             forcelogout = 1;
+            event.consume();
             return;
             //event.setMenuEntry(useLogsOnNPC());
             //timeout = 1;
@@ -262,10 +265,15 @@ public class A1CPlankMakePlugin extends Plugin
             action = "houseOpts";
             return;
         }
-        event.setMenuEntry(teleToBank());
-        timeout = 5;
-        action = "teletobank";
-        return;
+        if (countInvIDs(logID) < 1
+                || countInvIDs(plankID) > 0) {
+            event.setMenuEntry(teleToBank());
+            timeout = 5;
+            action = "teletobank";
+            return;
+        }
+        action = "idle";
+        event.consume();
     }
 
     //SUBROUTINES

@@ -25,7 +25,7 @@ import ProjectVersions.rlVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "1337.10.10"
+version = "1337.10.11"
 
 project.extra["PluginName"] = "A1C Plank Make" // This is the name that is used in the external plugin manager panel
 project.extra["PluginDescription"] = "Adam Plank Make" // This is the description that is used in the external plugin manager panel

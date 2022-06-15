@@ -160,11 +160,12 @@ public class A1CConstructionPlugin extends Plugin
             }
                 lastaction = action;
             if (config.build() == Types.Build.MAHOGANY_TABLE) {
-                handleMahoganyClick(event);
+                handleTableClick(event);
                 debug();
             }
-            if (config.build() == Types.Build.TEAK_BENCH) {
-                handleTeakClick(event);
+            if (config.build() == Types.Build.TEAK_BENCH
+                    || config.build() == Types.Build.MAHOGANY_BENCH) {
+                handleBenchClick(event);
                 debug();
             }
 
@@ -177,7 +178,7 @@ public class A1CConstructionPlugin extends Plugin
     }
 
     //Handle clicks
-    private void handleMahoganyClick(MenuOptionClicked event)
+    private void handleTableClick(MenuOptionClicked event)
     {
         if (!isAtStartLoc()) {
             walkTile(startLoc);
@@ -251,7 +252,7 @@ public class A1CConstructionPlugin extends Plugin
         action = "idle";
     }
 
-    private void handleTeakClick(MenuOptionClicked event)
+    private void handleBenchClick(MenuOptionClicked event)
     {
         if (!isAtStartLoc()) {
             walkTile(startLoc);
@@ -533,6 +534,16 @@ public class A1CConstructionPlugin extends Plugin
                     .setType(MenuAction.CC_OP)
                     .setParam0(-1)
                     .setParam1(30015497)
+                    .setForceLeftClick(false);
+        }
+        if (config.build() == Types.Build.MAHOGANY_BENCH) {
+            return client.createMenuEntry(0)
+                    .setOption("Build")
+                    .setTarget("Mahogany bench")
+                    .setIdentifier(1)
+                    .setType(MenuAction.CC_OP)
+                    .setParam0(-1)
+                    .setParam1(30015493)
                     .setForceLeftClick(false);
         }
         return null;

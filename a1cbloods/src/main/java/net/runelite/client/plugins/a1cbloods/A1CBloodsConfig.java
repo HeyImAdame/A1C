@@ -56,4 +56,13 @@ public interface A1CBloodsConfig extends Config
     default boolean consumeMisclicks() {
         return true;
     }
+    @ConfigItem(
+            position = 6,
+            keyName = "testing",
+            name = "Testing",
+            description = "For testing"
+    )
+    default int testing() {
+        return 0;
+    }
 }

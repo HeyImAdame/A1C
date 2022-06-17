@@ -105,10 +105,18 @@ public class A1CBloodsPlugin extends Plugin {
         }
         if (client.getLocalPlayer().getAnimation() != -1) {
             if (client.getLocalPlayer().getAnimation() == 791) {
+                if (config.testing() == 14323) {
+                    timeout = 1;
+                    return;
+                }
                 timeout = 2;
                 return;
             }
-            timeout = 2;
+            if (config.testing() == 14323) {
+                timeout = 2;
+                return;
+            }
+            timeout = 4;
         }
     }
     @Subscribe

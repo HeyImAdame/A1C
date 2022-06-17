@@ -392,14 +392,7 @@ public class A1CBloodsPlugin extends Plugin {
             return;
         }
 
-        Widget tab = getInventoryItem(ItemID.TELEPORT_TO_HOUSE);
-        createMenuEntry(2,
-                MenuAction.CC_OP,
-                tab.getIndex(),
-                9764864,
-                false);
-        setEntry(event, itemEntry(getInventoryItem(ItemID.TELEPORT_TO_HOUSE), 2));
-        //event.setMenuEntry(teleToPOHMES());
+        event.setMenuEntry(HouseTele());
         timeout = 5;
     }
 
@@ -568,6 +561,27 @@ public class A1CBloodsPlugin extends Plugin {
                 pouch.getIndex(),
                 WidgetInfo.INVENTORY.getId(),
                 false);
+    }
+    private MenuEntry HouseTele() {
+        if (getInventoryItem(ItemID.TELEPORT_TO_HOUSE) != null) {
+            Widget tab = getInventoryItem(ItemID.TELEPORT_TO_HOUSE);
+            return createMenuEntry(2,
+                    MenuAction.CC_OP,
+                    tab.getIndex(),
+                    9764864,
+                    false);
+        }
+        if (getInventoryItem(ItemID.CONSTRUCT_CAPET) != null) {
+            Widget tab = getInventoryItem(ItemID.CONSTRUCT_CAPET);
+            return createMenuEntry(6,
+                    MenuAction.CC_OP,
+                    tab.getIndex(),
+                    9764864,
+                    false);
+        }
+        //setEntry(event, itemEntry(getInventoryItem(ItemID.TELEPORT_TO_HOUSE), 2));
+        //event.setMenuEntry(teleToPOHMES());
+        return null;
     }
 
 

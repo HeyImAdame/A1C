@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Plugin-Version: 1337.2.7
+Plugin-Version: 1337.2.8
 Plugin-Id: acblastfurnace-plugin
 Plugin-Provider: HeyImAdame
 Plugin-Description: Adam Bar Provider

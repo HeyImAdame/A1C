@@ -108,7 +108,7 @@ public class A1CBloodsPlugin extends Plugin {
                 timeout = 2;
                 return;
             }
-            timeout = 4;
+            timeout = 2;
         }
     }
     @Subscribe

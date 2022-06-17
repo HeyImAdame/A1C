@@ -368,7 +368,7 @@ public class A1CPlankMakePlugin extends Plugin
     }
     private MenuEntry teleToBank() {
         GameObject JewelryBox = getGameObject(29156);
-        GameObject Jewelrybox2 = getGameObject(29154);
+        GameObject JewelryBox2 = getGameObject(29154);
         if (config.bank() == Types.Bank.CWars) {
             if (JewelryBox != null) {
                 return createMenuEntry(JewelryBox.getId(),
@@ -377,11 +377,11 @@ public class A1CPlankMakePlugin extends Plugin
                         getLocation(JewelryBox).getY(),
                         false);
             }
-            if (Jewelrybox2 != null) {
-                return createMenuEntry(Jewelrybox2.getId(),
+            if (JewelryBox2 != null) {
+                return createMenuEntry(JewelryBox2.getId(),
                         MenuAction.GAME_OBJECT_THIRD_OPTION,
-                        getLocation(JewelryBox).getX(),
-                        getLocation(JewelryBox).getY(),
+                        getLocation(JewelryBox2).getX(),
+                        getLocation(JewelryBox2).getY(),
                         false);
             }
         }

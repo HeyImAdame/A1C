@@ -313,17 +313,24 @@ public class A1CBloodsPlugin extends Plugin {
                     justTeled = 0;
                     return;
                 case 7:
-                    Widget tab = getInventoryItem(ItemID.TELEPORT_TO_HOUSE);
-                    createMenuEntry(2,
-                            MenuAction.CC_OP,
-                            tab.getIndex(),
-                            WidgetInfo.INVENTORY.getId(),
-                            true);
-                    setEntry(event, itemEntry(getInventoryItem(ItemID.TELEPORT_TO_HOUSE), 2));
-                    //event.setMenuEntry(teleToPOHMES());
-                    timeout = 5;
+//                    Widget tab = getInventoryItem(ItemID.TELEPORT_TO_HOUSE);
+//                    createMenuEntry(2,
+//                            MenuAction.CC_OP,
+//                            tab.getIndex(),
+//                            WidgetInfo.INVENTORY.getId(),
+//                            true);
+//                    setEntry(event, itemEntry(getInventoryItem(ItemID.TELEPORT_TO_HOUSE), 2));
+                    event.setMenuEntry(closeBank());
+                    timeout = 0;
+                    action = "closebank";
                     return;
             }
+        }
+        if (action == "closebank") {
+            event.setMenuEntry(teleToPOHMES());
+            timeout = 5;
+            action = "telePOH";
+            return;
         }
         if (isInBloodAltarArea()) {
             event.setMenuEntry(enterAltarMES());
@@ -392,7 +399,7 @@ public class A1CBloodsPlugin extends Plugin {
             return;
         }
 
-        event.setMenuEntry(HouseTele());
+        event.setMenuEntry(teleToPOHMES());
         timeout = 5;
     }
 
@@ -583,8 +590,6 @@ public class A1CBloodsPlugin extends Plugin {
         //event.setMenuEntry(teleToPOHMES());
         return null;
     }
-
-
     private MenuEntry createMoonclanTeleportMenuEntry() {
         return client.createMenuEntry(
                 "Cast",
@@ -700,6 +705,13 @@ public class A1CBloodsPlugin extends Plugin {
                     false);
         }
         return null;
+    }
+    private MenuEntry closeBank() {
+        return createMenuEntry(1,
+                MenuAction.CC_OP,
+                11,
+                786434,
+                false);
     }
     private MenuEntry withdrawEssence() {
         int essence = ItemID.PURE_ESSENCE;

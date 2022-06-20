@@ -25,8 +25,6 @@ import org.pf4j.Extension;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.runelite.api.ObjectID.CONVEYOR_BELT;
-
 @Extension
 @PluginDescriptor(
         name = "A1C Bloods Morytania",
@@ -104,16 +102,21 @@ public class A1CBloodsPlugin extends Plugin {
             craftedRunes = true;
         }
         if (client.getLocalPlayer().getAnimation() != -1) {
-            if (client.getLocalPlayer().getAnimation() == 791) {
-                if (config.testing() == 14323) {
-                    timeout = 1;
+            if (client.getLocalPlayer().getAnimation() == 714) {return;}
+            if (config.testing() == 14323) {
+                if (action =="hideout1" || action =="hideout2") {
+                    timeout = 2;
                     return;
                 }
+                timeout = 1;
+                return;
+            }
+            if (client.getLocalPlayer().getAnimation() == 791) {
                 timeout = 2;
                 return;
             }
             if (config.testing() == 14323) {
-                timeout = 2;
+                timeout = 1;
                 return;
             }
             timeout = 4;
@@ -264,63 +267,80 @@ public class A1CBloodsPlugin extends Plugin {
                 case 7:
                     if (justTeled == 0 || timeout == 0) {
                         setEntry(event, createMoonclanTeleportMenuEntry());
-                        timeout = 4;
+                        timeout = 3;
                         justTeled = 1;
                         return;
                     }
             }
         }
+        if (action == "closebank") {
+            event.setMenuEntry(teleToPOHMES());
+            timeout = 8;
+            action = "telePOH";
+            return;
+        }
         if (isbankOpen()) {
             action = "banking" + bankingState;
             switch (bankingState) {
                 case 0:
+                    if (config.testing() == 14323) {
+                        if (getInventoryItem(ItemID.BLOOD_RUNE) != null) {
+                            event.setMenuEntry(depositBloods());
+                            bankingState = 1;
+                            return;
+                        }
+                    }
                     event.setMenuEntry(withdrawEssence());
-                    bankingState = 1;
+                    bankingState = 2;
                     return;
                 case 1:
+                    event.setMenuEntry(withdrawEssence());
+                    bankingState = 2;
+                    return;
+                case 2:
                     if (colossalPouch != null) {
                         event.setMenuEntry(fillPouchMES(colossalPouch));
-                        bankingState = 3;
+                        bankingState = 4;
                         return;
                     }
                     if (giantPouch != null) {
                         event.setMenuEntry(fillPouchMES(giantPouch));
-                        bankingState = 2;
-                        return;
-                    }
-                case 2:
-                    if (largePouch != null) {
-                        event.setMenuEntry(fillPouchMES(largePouch));
                         bankingState = 3;
                         return;
                     }
                 case 3:
-                    event.setMenuEntry(withdrawEssence());
-                    bankingState = 4;
-                    return;
+                    if (largePouch != null) {
+                        event.setMenuEntry(fillPouchMES(largePouch));
+                        bankingState = 4;
+                        return;
+                    }
                 case 4:
+                    event.setMenuEntry(withdrawEssence());
+                    bankingState = 5;
+                    return;
+                case 5:
                     if (colossalPouch != null) {
                         event.setMenuEntry(fillPouchMES(colossalPouch));
-                        bankingState = 6;
+                        bankingState = 7;
                         return;
                     }
                     if (mediumPouch != null) {
                         event.setMenuEntry(fillPouchMES(mediumPouch));
-                        bankingState = 5;
-                        return;
-                    }
-                case 5:
-                    if (smallPouch != null) {
-                        event.setMenuEntry(fillPouchMES(smallPouch));
                         bankingState = 6;
                         return;
                     }
                 case 6:
+                    if (smallPouch != null) {
+                        event.setMenuEntry(fillPouchMES(smallPouch));
+                        bankingState = 7;
+                        return;
+                    }
+                case 7:
                     event.setMenuEntry(withdrawEssence());
-                    bankingState = 7;
+                    bankingState = 8;
                     justTeled = 0;
                     return;
-                case 7:
+                case 8:
 //                    Widget tab = getInventoryItem(ItemID.TELEPORT_TO_HOUSE);
 //                    createMenuEntry(2,
 //                            MenuAction.CC_OP,
@@ -333,12 +353,6 @@ public class A1CBloodsPlugin extends Plugin {
                     action = "closebank";
                     return;
             }
-        }
-        if (action == "closebank") {
-            event.setMenuEntry(teleToPOHMES());
-            timeout = 5;
-            action = "telePOH";
-            return;
         }
         if (isInBloodAltarArea()) {
             event.setMenuEntry(enterAltarMES());
@@ -355,7 +369,7 @@ public class A1CBloodsPlugin extends Plugin {
             }
             event.setMenuEntry(useFairyRingMES());
             action = "fairyring";
-            timeout = 8;
+            timeout = 2;
             return;
         }
         if (isInMorytaniaHideout1()) {
@@ -403,12 +417,12 @@ public class A1CBloodsPlugin extends Plugin {
         if (getEmptySlots() > 0 && bankMES() != null) {
             event.setMenuEntry(bankMES());
             action = "bank";
-            timeout = 1;
+            timeout = 2;
             return;
         }
 
         event.setMenuEntry(teleToPOHMES());
-        timeout = 5;
+        timeout = 8;
     }
 
     //ACTIONS
@@ -721,6 +735,19 @@ public class A1CBloodsPlugin extends Plugin {
                 786434,
                 false);
     }
+    private MenuEntry depositBloods() {
+        Widget item1 = getInventoryItem(ItemID.BLOOD_RUNE);
+        if (item1 == null)
+        {
+            return null;
+        }
+        return createMenuEntry(
+                8,
+                MenuAction.CC_OP_LOW_PRIORITY,
+                item1.getIndex(),
+                983043,
+                false);
+    }
     private MenuEntry withdrawEssence() {
         int essence = ItemID.PURE_ESSENCE;
         if (config.essenceType() == EssenceType.DAEYALT_ESSENCE) {
@@ -900,7 +927,8 @@ public class A1CBloodsPlugin extends Plugin {
                 || client.getLocalPlayer().getAnimation() == 4071
                 || client.getLocalPlayer().getAnimation() == 3265
                 || client.getLocalPlayer().getAnimation() == 3266)
-                && client.getLocalPlayer().getAnimation() != 791;
+                && client.getLocalPlayer().getAnimation() != 791
+                || client.getWidget(WidgetInfo.BANK_PIN_CONTAINER) != null;
     }
 
     //EXTRAS
